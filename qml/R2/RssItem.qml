@@ -5,6 +5,8 @@ Item {
     width: parent.width
     height: activeFocus?title.height+20:title.height+10
     Behavior on height{NumberAnimation{duration: 200}}
+    property string feed: feedid
+    property string title: feedtitle
 
     Rectangle {
         id: bg
@@ -36,7 +38,7 @@ Item {
     TextEdit {
         id: title
         color: "#f5ecec"
-        text: rssname
+        text: rssitem.title
         anchors.right: parent.right
         anchors.rightMargin: 10
         anchors.left: feedImg.right
@@ -48,9 +50,9 @@ Item {
 
     Image {
         id: feedImg
+        y: 0
         anchors.left: parent.left
         anchors.leftMargin: 10
-        anchors.verticalCenterOffset: 0
         anchors.verticalCenter: parent.verticalCenter
         source: "pics/rss_24.png"
         opacity: rssitem.activeFocus?1:0.6

@@ -1,20 +1,16 @@
 import Qt 4.7
 
-FocusScope {
-    id: tagItem
+Item {
+    id: feeditem
     width: parent.width
-    height: activeFocus?40:32
+    height: activeFocus?title.height+20:title.height+10
     Behavior on height{NumberAnimation{duration: 200}}
-    property string title: title.text
-
-    function setCount(countvar){
-        count.text = countvar
-    }
-
+    property string title: ititle
+    property string content: icontent
 
     Rectangle {
-        id: rectangle1
-        radius: 5
+        id: bg
+        radius: 10
         gradient: Gradient {
             GradientStop {
                 id: gradientstop1
@@ -25,48 +21,42 @@ FocusScope {
 
 
             GradientStop {
-                id: gradientstop3
+                id: gradientstop2
                 position: 1
                 color: "#0d0d0d"
                 Behavior on color{PropertyAnimation{duration: 200}}
             }
         }
+        anchors.rightMargin: 1
+        anchors.leftMargin: 1
+        anchors.bottomMargin: 1
+        anchors.topMargin: 1
         anchors.fill: parent
-
+        opacity: 1
     }
 
-    Image {
-        id: tagimg
-        x: 7
-        y: 4
-        opacity: tagItem.activeFocus?1:0.5
-        anchors.verticalCenter: parent.verticalCenter
-        source: "pics/tag_24.png"
-    }
-
-    Text {
+    TextEdit {
         id: title
-        y: 8
-        width: 80
-        height: 20
-        color: "#ffffff"
-        text: tagname
-        anchors.left: tagimg.right
+        color: "#f5ecec"
+        text: feeditem.title
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+        anchors.left: feedImg.right
         anchors.leftMargin: 10
         anchors.verticalCenter: parent.verticalCenter
+        wrapMode: TextEdit.WrapAnywhere
+        font.bold: true
     }
 
     Image {
-        id: go
-        scale: tagItem.activeFocus?0.6:0.4
-        anchors.right: parent.right
-        anchors.rightMargin: 5
+        id: feedImg
+        anchors.left: parent.left
+        anchors.leftMargin: 10
+        anchors.verticalCenterOffset: 0
         anchors.verticalCenter: parent.verticalCenter
-        source: "pics/video_play_24.png"
-        opacity: tagItem.activeFocus?1:0.5
+        source: "pics/rss_24.png"
+        opacity: feeditem.activeFocus?1:0.6
     }
-
-
 
     states: [
         State {
@@ -80,10 +70,11 @@ FocusScope {
 
 
             PropertyChanges {
-                target: gradientstop3
+                target: gradientstop2
                 position: 1
                 color: "#2f2f2f"
             }
         }
     ]
+
 }

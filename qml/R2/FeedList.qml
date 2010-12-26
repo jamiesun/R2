@@ -1,19 +1,19 @@
 import Qt 4.7
 import "models"
 Rectangle {
-    id:taglist
+    id:feedlist
     property string auth: ''
     property string sid: ''
-    property string source: "tags.xml"
+    property string title: ""
     Behavior on opacity{NumberAnimation{duration: 200}}
     width: 320
     height: 240
-    signal itemClick(string tag)
+    signal back()
+    signal itemClick(string content)
 
-    function updateModel(mauth,msid){
-        auth = mauth
-        sid = msid
-        tagsModel.update()
+    function update(title,url){
+        feedlist.title = title
+        feedModel.update(url)
     }
 
     onFocusChanged: {
@@ -21,6 +21,13 @@ Rectangle {
             list_view.forceActiveFocus()
         }
     }
+
+    Keys.onPressed:{
+        if(event.key == '17825793'){
+            back()
+        }
+    }
+
 
     gradient: Gradient {
         GradientStop {
@@ -33,13 +40,15 @@ Rectangle {
             color: "#000000"
         }
     }
-    TagsModel{
-        id:tagsModel;auth: taglist.auth;sid: taglist.sid
+
+    FeedModel{
+        id:feedModel;auth: feedlist.auth;sid: feedlist.sid
         onError: console.log(error)
     }
 
-    ToolBar {
-        id: toolbar
+    RssToolBar {
+        id: rsstoolbar
+        title: feedlist.title
         anchors.right: parent.right
         anchors.rightMargin: 0
         anchors.left: parent.left
@@ -52,38 +61,36 @@ Rectangle {
     ListView {
         id: list_view
         anchors.bottomMargin: 24
-        anchors.top: toolbar.bottom
+        anchors.top: rsstoolbar.bottom
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.topMargin: 0
         clip: true
-        model: tagsModel
-        delegate: TagItem{
-            id:tagItem
-            Keys.onRightPressed:itemClick(tagItem.title)
-            Keys.onSelectPressed:itemClick(tagItem.title)
+        model: feedModel
+        delegate: FeedItem{
+            id:feedItem
+            Keys.onRightPressed:itemClick(feedItem.content)
+            Keys.onSelectPressed:itemClick(feedItem.content)
         }
 
-        KeyNavigation.left:toolbar
-
+        KeyNavigation.left:rsstoolbar
         Loading{
             id:loading
             anchors.fill: parent
-            show: tagsModel.busy
+            show: feedModel.busy
         }
 
     }
 
-    IMenuBar {
-        id: imenubar1
+    MenuBar {
+        id: menubar1
         y: 216
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
         anchors.right: parent.right
         anchors.rightMargin: 0
         anchors.left: parent.left
         anchors.leftMargin: 0
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
     }
-
 }

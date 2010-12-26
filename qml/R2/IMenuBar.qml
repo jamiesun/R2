@@ -36,7 +36,7 @@ Rectangle {
         y: 2
         width: 54
         height: 19
-        text: "Back"
+        text: "Exit"
         anchors.right: parent.right
         anchors.rightMargin: 5
         anchors.verticalCenter: parent.verticalCenter

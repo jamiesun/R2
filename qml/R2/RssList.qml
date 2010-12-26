@@ -1,13 +1,21 @@
 import Qt 4.7
-
+import "models"
 Rectangle {
     id:rsslist
-    property string tag: "tag"
+    property string auth: ''
+    property string sid: ''
+    property string tag: ""
     property string source: "rss.xml"
     Behavior on opacity{NumberAnimation{duration: 200}}
     width: 320
     height: 240
     signal back()
+    signal itemClick(string title,string url)
+
+    function filter(tag){
+        rsslist.tag = tag
+        rssModel.filter(tag)
+    }
 
     onFocusChanged: {
         if(activeFocus){
@@ -34,13 +42,9 @@ Rectangle {
         }
     }
 
-    XmlListModel{
-        id:tagsModel
-        source:rsslist.source
-        query: "/items/item"
-        XmlRole { name: "rssname"; query: "@name/string()" }
-        XmlRole { name: "rssdesc"; query: "desc/string()" }
-        XmlRole { name: "rssurl"; query: "@url/string()" }
+    RssModel{
+        id:rssModel;auth: rsslist.auth;sid: rsslist.sid
+        onError: console.log(error)
     }
 
     RssToolBar {
@@ -64,13 +68,19 @@ Rectangle {
         anchors.left: parent.left
         anchors.topMargin: 0
         clip: true
-        keyNavigationWraps: true
-        model: tagsModel
+        model: rssModel
         delegate: RssItem{
             id:rssItem
+            Keys.onRightPressed:itemClick(rssItem.title,rssItem.feed)
+            Keys.onSelectPressed:itemClick(rssItem.title,rssItem.feed)
         }
 
         KeyNavigation.left:rsstoolbar
+        Loading{
+            id:loading
+            anchors.fill: parent
+            show: rssModel.busy
+        }
 
     }
 
