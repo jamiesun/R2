@@ -37,6 +37,7 @@ Item {
 
     TextEdit {
         id: title
+        clip: false
         color: "#f5ecec"
         text: rssitem.title
         anchors.right: parent.right

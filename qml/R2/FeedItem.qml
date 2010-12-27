@@ -37,6 +37,7 @@ Item {
 
     TextEdit {
         id: title
+        clip: false
         color: "#f5ecec"
         text: feeditem.title
         anchors.right: parent.right

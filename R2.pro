@@ -58,7 +58,6 @@ OTHER_FILES += \
     qml/R2/main.qml \
     qml/R2/Loading.qml \
     qml/R2/json2.js \
-    qml/R2/jquery.js \
     qml/R2/IMenuBar.qml \
     qml/R2/FeedList.qml \
     qml/R2/FeedItem.qml \
@@ -66,7 +65,6 @@ OTHER_FILES += \
     qml/R2/cache.js \
     qml/R2/Button.qml \
     qml/R2/auth.js \
-    qml/R2/Api.js \
     qml/R2/Alert.qml \
     qml/R2/pics/wifi_64.png \
     qml/R2/pics/wifi_48.png \

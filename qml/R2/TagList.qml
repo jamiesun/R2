@@ -8,6 +8,7 @@ Rectangle {
     width: 320
     height: 240
     signal itemClick(string tag)
+    signal doSettings()
 
     function updateModel(mauth,msid){
         auth = mauth
@@ -52,6 +53,7 @@ Rectangle {
         anchors.top: parent.top
         anchors.topMargin: 0
         KeyNavigation.up:list_view;KeyNavigation.down:list_view
+        onSettings: doSettings()
     }
 
     ListView {

@@ -84,6 +84,7 @@ Rectangle {
                 rsslist.forceActiveFocus()
             }
         }
+        onDoSettings: main.state = "showSettings"
     }
 
     RssList {
@@ -104,7 +105,7 @@ Rectangle {
         onBack:main.state = "showRsslist"
         onItemClick: {
             main.state = "showItem"
-            feedDetail.content = content
+            feedDetail.setContent(content)
         }
         onHome:main.state = "showMain"
     }
@@ -133,6 +134,7 @@ Rectangle {
         onCancel:main.state = "showMain"
         onSave: {
             utils.safeWrite(".config",cfgData)
+            main.state = "showMain"
         }
     }
 

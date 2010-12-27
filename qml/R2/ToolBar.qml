@@ -5,6 +5,9 @@ Item {
     width:320// parent.width
     height: 40
 
+    signal settings()
+    signal tagadd()
+
     onFocusChanged: {
         if(activeFocus){
            tagAdd.forceActiveFocus()
@@ -55,6 +58,19 @@ Item {
         anchors.leftMargin: 10
         anchors.verticalCenter: parent.verticalCenter
         source: "pics/tag_add_24.png"
+        KeyNavigation.right:setting;KeyNavigation.left:setting
+        Keys.onSelectPressed:tagadd()
+    }
+
+    Image {
+        id: setting
+        opacity: activeFocus?1:0.7
+        anchors.left: tagAdd.right
+        anchors.leftMargin: 10
+        anchors.verticalCenter: parent.verticalCenter
+        source: "pics/spanner_24.png"
+        KeyNavigation.left:tagAdd;KeyNavigation.right:tagAdd
+        Keys.onSelectPressed:settings()
     }
 
 }

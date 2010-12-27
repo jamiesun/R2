@@ -1,7 +1,6 @@
 import Qt 4.7
 import QtWebKit 1.0
 Flickable {
-    property string content: ''
     property bool hide: true
     id: flickable
     width: parent.width
@@ -22,6 +21,11 @@ Flickable {
         if(event.key == '17825792'){
             home()
         }
+    }
+
+    function setContent(content){
+        web_view.html = "<style> body{font-size：12px;} img{max-width:"+(flickable.parent.width-20)+"px;} </style>"+content
+        //web_view.evaluateJavaScript("location.reload();")
     }
 
     Rectangle{
@@ -57,10 +61,12 @@ Flickable {
         clip: true
         preferredWidth: flickable.width
         preferredHeight: flickable.height
-        html: "<style> body{font-size：12px;} img{max-width:"+(flickable.parent.width-20)+"px;} </style>"+content
         settings.javascriptEnabled: true
         settings.pluginsEnabled: true
+        renderingEnabled: true
+        settings.privateBrowsingEnabled: true
         settings.localContentCanAccessRemoteUrls: true
+
         Behavior on opacity{NumberAnimation{duration: 200}}
 
         Keys.onDigit1Pressed:{
@@ -88,6 +94,7 @@ Flickable {
             if(!flickable.atXEnd)
                 flickable.contentX += 5;
         }
+
 
 
     }

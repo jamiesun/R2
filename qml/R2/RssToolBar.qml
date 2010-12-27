@@ -46,7 +46,7 @@ Item {
         anchors.left: rssAdd.right
         anchors.leftMargin: 10
         anchors.verticalCenter: parent.verticalCenter
-        font.pointSize: 10
+        font.pointSize: 9
         font.bold: true
     }
 

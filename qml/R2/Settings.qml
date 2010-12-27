@@ -8,6 +8,7 @@ Item {
     signal finish()
     signal cancel()
     signal save(string cfgData)
+    Behavior on opacity{NumberAnimation{duration: 200}}
 
     function doSave(){
         if(email.text==""){ebox.forceActiveFocus();}
