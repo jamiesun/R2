@@ -9,7 +9,9 @@ Rectangle {
     property string passwd: ""
     property string auth: ''
     property string sid: ''
+    property string token: ''
     property string feedMax: "30"
+
     property string stateUrl: "https://www.google.com/reader/api/0/stream/contents/user/-/state/com.google/"
     gradient: Gradient {
         GradientStop {
@@ -31,6 +33,20 @@ Rectangle {
     Utils{id:utils}
 
     WorkerScript {
+        id: tokenWork
+        source: "token.js"
+        onMessage: {
+            if(messageObject.token){
+                console.log("token success")
+                main.token = messageObject.token
+            }
+            else{
+                console.log("token faild");
+            }
+        }
+    }
+
+    WorkerScript {
         id: authWork
         source: "auth.js"
         onMessage: {
@@ -38,6 +54,7 @@ Rectangle {
                 console.log("login success")
                 main.auth = messageObject.auth;
                 main.sid = messageObject.sid;
+                tokenWork.sendMessage({auth:main.auth,sid:main.sid})
                 taglist.updateModel(main.auth,main.sid)
             }
             else{
@@ -47,6 +64,8 @@ Rectangle {
 
         }
     }
+
+
 
     function initConfig(){
         var cfgstr = utils.safeRead(".config")
@@ -64,14 +83,13 @@ Rectangle {
             main.feedMax = cfgs[2]?cfgs[2]:"30"
             authWork.sendMessage({email:main.email,passwd:main.passwd});
             loading.show = true
-            console.log(main.email);
         }
     }
 
     Component.onCompleted:initConfig()
 
     TagList {
-        id: taglist
+        id: taglist;auth:main.auth;sid:main.sid;
         anchors.fill: parent
         focus: true
         onItemClick: {
@@ -88,7 +106,7 @@ Rectangle {
     }
 
     RssList {
-        id: rsslist;auth: main.auth;sid: main.sid
+        id: rsslist;auth:main.auth;sid:main.sid;
         anchors.fill: parent
         opacity: 0
         onBack:main.state = "showMain"
@@ -99,7 +117,7 @@ Rectangle {
     }
 
     FeedList{
-        id: feedlist;auth: main.auth;sid: main.sid
+        id: feedlist;auth:main.auth;sid:main.sid;token:main.token
         anchors.fill: parent
         opacity: 0
         onBack:main.state = "showRsslist"
@@ -114,8 +132,8 @@ Rectangle {
         id:feedDetail
         hide:main.state!="showItem"
         anchors.fill: parent
-        onPrevious: content = itemFeeds.previous()
-        onNext: content = itemFeeds.next()
+        onPrevious: feedDetail.setContent(feedlist.previous())
+        onNext: feedDetail.setContent(feedlist.next())
         onBack: {
             if(feedlist.title=="starred"||feedlist.title=="broadcast"||feedlist.title=="created"){
                 main.state = "showFeedList2";
@@ -129,7 +147,6 @@ Rectangle {
     Settings{
         id:settings
         opacity: 0
-        email: main.email;passwd: main.passwd;feedMax: main.feedMax
         anchors.fill: parent
         onCancel:main.state = "showMain"
         onSave: {

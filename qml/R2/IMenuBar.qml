@@ -22,7 +22,7 @@ Rectangle {
     Button {
         id: button1
         opacity: button1.text?1:0
-        width: 65
+        width: 58
         height: 19
         text: lkey
         anchors.verticalCenterOffset: 0
@@ -34,7 +34,7 @@ Rectangle {
     Button {
         id: button2
         opacity: button2.text?1:0
-        width: 65
+        width: 58
         height: 19
         text: rkey
         anchors.right: parent.right

@@ -2,9 +2,13 @@ import Qt 4.7
 import "models"
 Rectangle {
     id:feedlist
-    property string auth: ''
-    property string sid: ''
+    property alias auth: feedModel.auth
+    property alias sid: feedModel.sid
+    property string token: ""
     property string title: ""
+    property alias feedMax: feedModel.feedMax
+
+
     Behavior on opacity{NumberAnimation{duration: 200}}
     width: 320
     height: 240
@@ -12,9 +16,42 @@ Rectangle {
     signal home()
     signal itemClick(string content)
 
+
+    WorkerScript {
+        id: actionWork
+        source: "edittag.js"
+        onMessage: {
+            if(messageObject.code==0){
+                console.log("action success")
+            }
+            else{
+                console.log("action faild");
+            }
+        }
+    }
+
     function update(title,url){
         feedlist.title = title
         feedModel.update(url)
+    }
+
+    function clickitem(){
+        var it =  list_view.currentItem;
+        itemClick("<h3>"+it.title+"</h3>"+it.content)
+        actionWork.sendMessage({auth:main.auth,sid:main.sid,token:main.token,action:"read",entry:it.itid,streamId:it.streamId})
+    }
+
+    function previous(){
+        list_view.decrementCurrentIndex();
+        var it =  list_view.currentItem;
+        actionWork.sendMessage({auth:main.auth,sid:main.sid,token:main.token,action:"read",entry:it.itid,streamId:it.streamId})
+        return "<h3>"+it.title+"</h3>"+it.content
+    }
+    function next(){
+        list_view.incrementCurrentIndex();
+        var it =  list_view.currentItem;
+        actionWork.sendMessage({auth:main.auth,sid:main.sid,token:main.token,action:"read",entry:it.itid,streamId:it.streamId})
+        return "<h3>"+it.title+"</h3>"+it.content
     }
 
     onFocusChanged: {
@@ -46,7 +83,7 @@ Rectangle {
     }
 
     FeedModel{
-        id:feedModel;auth: feedlist.auth;sid: feedlist.sid
+        id:feedModel
         onError: console.log(error)
     }
 
@@ -60,6 +97,7 @@ Rectangle {
         anchors.top: parent.top
         anchors.topMargin: 0
         KeyNavigation.up:list_view;KeyNavigation.down:list_view
+        onReload:feedModel.reload()
     }
 
     ListView {
@@ -74,8 +112,8 @@ Rectangle {
         model: feedModel
         delegate: FeedItem{
             id:feedItem
-            Keys.onRightPressed:itemClick(feedItem.content)
-            Keys.onSelectPressed:itemClick(feedItem.content)
+            Keys.onRightPressed:clickitem()
+            Keys.onSelectPressed:clickitem()
         }
 
         KeyNavigation.left:rsstoolbar

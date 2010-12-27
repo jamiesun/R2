@@ -5,3 +5,6 @@ function set(k,v){
 function get(k){
     return cache[k];
 }
+function size(){
+    return cache.length;
+}

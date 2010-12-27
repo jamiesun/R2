@@ -6,11 +6,12 @@ Item {
     height: 40
 
     signal settings()
-    signal tagadd()
+    signal notes()
+    signal reload()
 
     onFocusChanged: {
         if(activeFocus){
-           tagAdd.forceActiveFocus()
+           reload.forceActiveFocus()
         }
     }
 
@@ -40,37 +41,45 @@ Item {
         anchors.fill: parent
     }
 
-    Text {
-        id: title
-        color: "#ffffff"
-        text: "R2 Reader"
-        anchors.right: parent.right
-        anchors.rightMargin:8
-        anchors.verticalCenter: parent.verticalCenter
-        font.pointSize: 10
-        font.bold: true
-    }
-
     Image {
-        id: tagAdd
+        id: notes
         opacity: activeFocus?1:0.7
-        anchors.left: parent.left
+        anchors.left: reload.right
         anchors.leftMargin: 10
         anchors.verticalCenter: parent.verticalCenter
-        source: "pics/tag_add_24.png"
-        KeyNavigation.right:setting;KeyNavigation.left:setting
-        Keys.onSelectPressed:tagadd()
+        source: "pics/document_24.png"
+        KeyNavigation.right:setting;KeyNavigation.left:reload
+        Keys.onSelectPressed:toolbar.notes()
     }
 
     Image {
         id: setting
         opacity: activeFocus?1:0.7
-        anchors.left: tagAdd.right
+        anchors.left: notes.right
         anchors.leftMargin: 10
         anchors.verticalCenter: parent.verticalCenter
         source: "pics/spanner_24.png"
-        KeyNavigation.left:tagAdd;KeyNavigation.right:tagAdd
-        Keys.onSelectPressed:settings()
+        KeyNavigation.left:notes;KeyNavigation.right:reload
+        Keys.onSelectPressed:toolbar.settings()
+    }
+
+    Image {
+        id: reload
+        opacity: activeFocus?1:0.7
+        anchors.left: parent.left
+        anchors.leftMargin: 10
+        anchors.verticalCenter: parent.verticalCenter
+        source: "pics/reload_24.png"
+        KeyNavigation.left:setting;KeyNavigation.right:notes
+        Keys.onSelectPressed:toolbar.reload()
+    }
+
+    Image {
+        id: logo
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+        anchors.verticalCenter: parent.verticalCenter
+        source: "pics/R2.png"
     }
 
 }

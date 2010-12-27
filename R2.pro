@@ -46,14 +46,12 @@ OTHER_FILES += \
     qml/R2/models/FeedModel.qml \
     qml/R2/ToolBar.qml \
     qml/R2/template.qml \
-    qml/R2/tags.xml \
     qml/R2/TagList.qml \
     qml/R2/TagItem.qml \
     qml/R2/Settings.qml \
     qml/R2/RssToolBar.qml \
     qml/R2/RssList.qml \
     qml/R2/RssItem.qml \
-    qml/R2/rss.xml \
     qml/R2/MenuBar.qml \
     qml/R2/main.qml \
     qml/R2/Loading.qml \
@@ -100,4 +98,16 @@ OTHER_FILES += \
     qml/R2/pics/lineedit.sci \
     qml/R2/pics/lineedit.png \
     R2.png \
-    R2.svg
+    R2.svg \
+    qml/R2/pics/reload_64.png \
+    qml/R2/pics/reload_48.png \
+    qml/R2/pics/reload_24.png \
+    qml/R2/pics/R2.png \
+    qml/R2/pics/magnifier_64.png \
+    qml/R2/pics/magnifier_48.png \
+    qml/R2/pics/magnifier_24.png \
+    qml/R2/pics/document_64.png \
+    qml/R2/pics/document_48.png \
+    qml/R2/pics/document_24.png \
+    qml/R2/edittag.js \
+    qml/R2/token.js

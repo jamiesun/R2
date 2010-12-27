@@ -54,6 +54,7 @@ Rectangle {
         anchors.topMargin: 0
         KeyNavigation.up:list_view;KeyNavigation.down:list_view
         onSettings: doSettings()
+        onReload:tagsModel.update()
     }
 
     ListView {

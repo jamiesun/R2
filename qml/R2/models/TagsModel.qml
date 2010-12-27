@@ -40,13 +40,13 @@ ListModel{
                 tagsModel.busy = true
             }
         }
-        http.open("GET", source+"&n="+feedMax);
+        http.open("GET", source);
         http.setRequestHeader("Authorization","GoogleLogin auth="+auth);
         http.setRequestHeader("Cookie","SID="+sid);
         http.setRequestHeader("accept-encoding", "gzip, deflate")
         //console.log("auth string:"+authStr+"\n\n sid="+sid)
         try {
-          console.log("http getFeeds send "+source)
+          console.log("http GET "+source)
           http.send();
         } catch (e) {
             console.log(e)

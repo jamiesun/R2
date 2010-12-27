@@ -6,8 +6,11 @@ ListModel {
     property string auth:""
     property string title:""
     property string feedUrl:""
+    property string feedMax: "30"
+
     property bool busy: false
     signal error(string error)
+    signal doContinuation(string c)
 
     function setData(result){
         feedModel.title = result.title
@@ -18,6 +21,8 @@ ListModel {
             var content = ""
             var summary = items[i].summary
             var icontent = items[i].content
+            var itemid = items[i].id
+            var istreamId = items[i].origin.streamId
             if(icontent){
                 content = icontent.content
             }else{
@@ -25,8 +30,13 @@ ListModel {
             }
 
 
-            feedModel.append({ititle:ititle,icontent:content})
+            feedModel.append({ititle:ititle,icontent:content,iid:itemid,istreamId:istreamId})
         }
+    }
+
+    function reload(){
+        Cache.set(feedModel.feedUrl,{})
+        update(feedModel.feedUrl)
     }
 
     function update(feedUrl){
@@ -48,8 +58,6 @@ ListModel {
         var http = new XMLHttpRequest();
         http.onreadystatechange = function() {
             if (http.readyState == XMLHttpRequest.DONE) {
-                console.log("getFeeds:"+http.status+"  "+http.statusText);
-                //console.log("resp:"+http.getAllResponseHeaders());
                 if(http.status==200){
                     var result = JSON.parse(http.responseText)
                     Cache.set(feedUrl,result)
@@ -65,11 +73,12 @@ ListModel {
             }
         }
 
-        http.open("GET", feedUrl);
+        http.open("GET", feedUrl+"?n="+feedMax);
         http.setRequestHeader("Authorization","GoogleLogin auth="+auth);
         http.setRequestHeader("Cookie","SID="+sid);
         http.setRequestHeader("accept-encoding", "gzip, deflate")
         try {
+          console.log("http GET "+feedUrl)
           http.send();
         } catch (e) {
             console.log(e)

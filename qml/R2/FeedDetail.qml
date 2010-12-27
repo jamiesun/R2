@@ -9,6 +9,8 @@ Flickable {
     pressDelay: 200
     smooth: true
 
+    Behavior on contentY{NumberAnimation{duration: 300}}
+
     signal next()
     signal previous()
     signal back()
@@ -79,21 +81,21 @@ Flickable {
 
         Keys.onUpPressed:{
             if(!flickable.atYBeginning)
-                flickable.contentY -= 5;
+                flickable.contentY -= 40;
         }
         Keys.onDownPressed:{
             if(!flickable.atYEnd)
-                flickable.contentY += 5;
+                flickable.contentY += 40;
         }
 
         Keys.onLeftPressed:{
-           if(!flickable.atXBeginning)
-                flickable.contentX -= 5;
+            flickable.previous()
         }
         Keys.onRightPressed:{
-            if(!flickable.atXEnd)
-                flickable.contentX += 5;
+            flickable.next()
         }
+
+
 
 
 

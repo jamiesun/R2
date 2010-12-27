@@ -7,9 +7,13 @@ ListModel{
     property string tag:""
     property string source: "http://www.google.com/reader/api/0/subscription/list?output=json"
     property string contentSource: "https://www.google.com/reader/api/0/stream/contents/"
+
+
     property bool busy: false
     property string cacheKey: "rssCache"
     signal error(string error)
+
+
 
     function filter(tag){
         rssModel.tag = tag
@@ -39,7 +43,7 @@ ListModel{
         }
     }
 
-    function update(tag,callback){
+    function update(){
 
         //console.log("start update tags \n sid="+sid+"\n auth="+auth)
         if(!sid||!auth){
@@ -66,13 +70,13 @@ ListModel{
                 rssModel.busy = true
             }
         }
-        http.open("GET", source+"&n="+feedMax);
+        http.open("GET", source);
         http.setRequestHeader("Authorization","GoogleLogin auth="+auth);
         http.setRequestHeader("Cookie","SID="+sid);
         http.setRequestHeader("accept-encoding", "gzip, deflate")
         //console.log("auth string:"+authStr+"\n\n sid="+sid)
         try {
-          console.log("http getFeeds send "+source)
+          console.log("http GET "+source)
           http.send();
         } catch (e) {
             console.log(e)

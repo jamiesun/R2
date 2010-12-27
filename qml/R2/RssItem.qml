@@ -46,7 +46,7 @@ Item {
         anchors.leftMargin: 10
         anchors.verticalCenter: parent.verticalCenter
         wrapMode: TextEdit.WrapAnywhere
-        font.bold: true
+        font.pointSize:8
     }
 
     Image {

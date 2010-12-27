@@ -5,13 +5,12 @@ Item {
     width: 320
     height: 40
     property string title: ""
-
-    onFocusChanged: {
+    signal reload()
+    onFocusChanged:{
         if(activeFocus){
-           rssAdd.forceActiveFocus()
+           reload.focus = true
         }
     }
-
 
     Rectangle {
         id: rectangle1
@@ -43,19 +42,24 @@ Item {
         id: title
         color: "#ffffff"
         text: toolbar.title
-        anchors.left: rssAdd.right
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+        anchors.left: reload.right
         anchors.leftMargin: 10
+        style: "Raised"
+        elide:Text.ElideRight
         anchors.verticalCenter: parent.verticalCenter
-        font.pointSize: 9
+        font.pointSize: 8
         font.bold: true
     }
 
     Image {
-        id: rssAdd
+        id: reload
+        opacity:activeFocus?1:0.8
         anchors.left: parent.left
         anchors.leftMargin: 10
-        opacity: activeFocus?1:0.7
         anchors.verticalCenter: parent.verticalCenter
-        source: "pics/plus_24.png"
+        source: "pics/reload_24.png"
+        Keys.onSelectPressed:toolbar.reload()
     }
 }

@@ -46,11 +46,11 @@ FocusScope {
 
     Text {
         id: title
-        y: 8
         width: 80
         height: 20
         color: "#ffffff"
         text: tagname
+        font.pointSize:8
         anchors.left: tagimg.right
         anchors.leftMargin: 10
         anchors.verticalCenter: parent.verticalCenter

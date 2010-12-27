@@ -61,6 +61,7 @@ Rectangle {
         anchors.top: parent.top
         anchors.topMargin: 0
         KeyNavigation.up:list_view;KeyNavigation.down:list_view
+        onReload:rssModel.update()
     }
 
     ListView {
