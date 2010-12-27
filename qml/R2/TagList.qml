@@ -4,7 +4,6 @@ Rectangle {
     id:taglist
     property string auth: ''
     property string sid: ''
-    property string source: "tags.xml"
     Behavior on opacity{NumberAnimation{duration: 200}}
     width: 320
     height: 240
@@ -14,6 +13,12 @@ Rectangle {
         auth = mauth
         sid = msid
         tagsModel.update()
+    }
+
+    Keys.onPressed:{
+        if(event.key == '17825793'){
+            taglist.state = "showQuitAlert"
+        }
     }
 
     onFocusChanged: {
@@ -77,7 +82,7 @@ Rectangle {
 
     IMenuBar {
         id: imenubar1
-        y: 216
+        lkey: "";rkey: "Exit"
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
         anchors.right: parent.right
@@ -85,5 +90,18 @@ Rectangle {
         anchors.left: parent.left
         anchors.leftMargin: 0
     }
+    Alert{
+        id:alert;opacity: 0
+        anchors.centerIn: parent
+    }
+
+    states: [
+        State {
+            name: "showQuitAlert"
+            PropertyChanges {
+                target: alert;focus:true;msg:"Are you quit?";opacity:1;onOk:Qt.quit();onCancel:taglist.state=""
+            }
+        }
+    ]
 
 }

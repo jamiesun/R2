@@ -4,11 +4,13 @@ Rectangle {
     id: main
     width: 320
     height: 240
+    focus: true
     property string email: ""
     property string passwd: ""
     property string auth: ''
     property string sid: ''
-    property string feedMax: "100"
+    property string feedMax: "30"
+    property string stateUrl: "https://www.google.com/reader/api/0/stream/contents/user/-/state/com.google/"
     gradient: Gradient {
         GradientStop {
             position: 0
@@ -21,7 +23,10 @@ Rectangle {
         }
     }
 
-    Keys.onPressed:console.log(event.key)
+    Keys.onPressed:{
+        console.log(event.key)
+    }
+
 
     Utils{id:utils}
 
@@ -46,12 +51,17 @@ Rectangle {
     function initConfig(){
         var cfgstr = utils.safeRead(".config")
         if(cfgstr == ""){
-            main.state = "settings"
+            main.state = "showSettings"
         }else{
             var cfgs = cfgstr.split(",")
+            if(cfgs.length<3){
+                console.log("error config")
+                main.state = "showSettings"
+                return
+            }
             main.email = cfgs[0]
             main.passwd = cfgs[1]
-            main.feedMax = cfgs[2]?cfgs[2]:"100"
+            main.feedMax = cfgs[2]?cfgs[2]:"30"
             authWork.sendMessage({email:main.email,passwd:main.passwd});
             loading.show = true
             console.log(main.email);
@@ -65,9 +75,14 @@ Rectangle {
         anchors.fill: parent
         focus: true
         onItemClick: {
-            main.state = "showRsslist"
-            rsslist.filter(tag)
-            rsslist.forceActiveFocus()
+            if(tag=="starred"||tag=="broadcast"||tag=="created"){
+                main.state = "showFeedList2"
+                feedlist.update(tag,stateUrl+tag)
+            }else{
+                main.state = "showRsslist"
+                rsslist.filter(tag)
+                rsslist.forceActiveFocus()
+            }
         }
     }
 
@@ -91,6 +106,7 @@ Rectangle {
             main.state = "showItem"
             feedDetail.content = content
         }
+        onHome:main.state = "showMain"
     }
 
     FeedDetail{
@@ -99,13 +115,32 @@ Rectangle {
         anchors.fill: parent
         onPrevious: content = itemFeeds.previous()
         onNext: content = itemFeeds.next()
-        onBack: main.state = "showFeedList";
+        onBack: {
+            if(feedlist.title=="starred"||feedlist.title=="broadcast"||feedlist.title=="created"){
+                main.state = "showFeedList2";
+            }else{
+                main.state = "showFeedList";
+            }
+        }
+        onHome:main.state = "showMain"
     }
+
+    Settings{
+        id:settings
+        opacity: 0
+        email: main.email;passwd: main.passwd;feedMax: main.feedMax
+        anchors.fill: parent
+        onCancel:main.state = "showMain"
+        onSave: {
+            utils.safeWrite(".config",cfgData)
+        }
+    }
+
+
 
     Loading{
         id:loading
         anchors.fill: parent
-        show: rssModel.busy
     }
 
     states: [
@@ -118,6 +153,8 @@ Rectangle {
             name: "showMain"
             PropertyChanges {target: taglist;opacity: 1;focus:true}
             PropertyChanges {target: rsslist;opacity: 0}
+            PropertyChanges {target: settings;opacity: 0}
+            PropertyChanges {target: feedlist;opacity: 0;onBack:main.state="showRsslist"}
         },
         State {
             name: "showFeedList"
@@ -125,9 +162,19 @@ Rectangle {
             PropertyChanges {target: rsslist;opacity: 0}
         },
         State {
+            name: "showFeedList2"
+            PropertyChanges {target: feedlist;opacity: 1;focus:true;onBack:main.state="showMain"}
+            PropertyChanges {target: rsslist;opacity: 0}
+        },
+        State {
             name: "showItem"
             PropertyChanges {target: feedDetail;opacity: 1;focus:true}
             PropertyChanges {target: feedlist;opacity: 0}
+        },
+        State {
+            name: "showSettings"
+            PropertyChanges {target: settings;opacity: 1;focus:true}
+            PropertyChanges {target: taglist;opacity: 0}
         }
 
 

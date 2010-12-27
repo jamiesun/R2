@@ -7,6 +7,8 @@ Item {
 
     property string text
 
+    Keys.onSelectPressed:clicked()
+
     BorderImage {
         id: buttonImage
         source: "pics/toolbutton.sci"

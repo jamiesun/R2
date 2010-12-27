@@ -10,6 +10,7 @@ Rectangle {
     width: 320
     height: 240
     signal back()
+    signal home()
     signal itemClick(string title,string url)
 
     function filter(tag){
@@ -26,6 +27,9 @@ Rectangle {
     Keys.onPressed:{
         if(event.key == '17825793'){
             back()
+        }
+        if(event.key == '17825792'){
+            home()
         }
     }
 
@@ -84,9 +88,9 @@ Rectangle {
 
     }
 
-    MenuBar {
+    IMenuBar {
         id: menubar1
-        y: 216
+        lkey: "";rkey: "Back"
         anchors.right: parent.right
         anchors.rightMargin: 0
         anchors.left: parent.left

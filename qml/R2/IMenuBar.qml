@@ -4,6 +4,8 @@ Rectangle {
     id: rectangle1
     width: 320
     height: 24
+    property string lkey: "Menu"
+    property string rkey: "Exit"
 
     gradient: Gradient {
         GradientStop {
@@ -19,11 +21,10 @@ Rectangle {
 
     Button {
         id: button1
-        x: 0
-        y: 3
-        width: 54
+        opacity: button1.text?1:0
+        width: 65
         height: 19
-        text: "Menu"
+        text: lkey
         anchors.verticalCenterOffset: 0
         anchors.left: parent.left
         anchors.leftMargin: 5
@@ -32,11 +33,10 @@ Rectangle {
 
     Button {
         id: button2
-        x: 266
-        y: 2
-        width: 54
+        opacity: button2.text?1:0
+        width: 65
         height: 19
-        text: "Exit"
+        text: rkey
         anchors.right: parent.right
         anchors.rightMargin: 5
         anchors.verticalCenter: parent.verticalCenter

@@ -13,10 +13,14 @@ Flickable {
     signal next()
     signal previous()
     signal back()
+    signal home()
 
     Keys.onPressed:{
         if(event.key == '17825793'){
             back()
+        }
+        if(event.key == '17825792'){
+            home()
         }
     }
 
@@ -26,17 +30,17 @@ Flickable {
         opacity: web_view.opacity
     }
 
-    property int histx : 0
-    property int histy : 0
+//    property int histx : 0
+//    property int histy : 0
 
-    function resetTbar(){
-        menubar.x += contentX-histx
-        menubar.y += contentY-histy
-        histx = contentX
-        histy = contentY
-    }
-    onContentXChanged: resetTbar()
-    onContentYChanged: resetTbar()
+//    function resetTbar(){
+//        menubar.x += contentX-histx
+//        menubar.y += contentY-histy
+//        histx = contentX
+//        histy = contentY
+//    }
+//    onContentXChanged: resetTbar()
+//    onContentYChanged: resetTbar()
 
 
     onFocusChanged: {

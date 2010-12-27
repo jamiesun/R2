@@ -2,7 +2,7 @@ import Qt 4.7
 
 Item {
     id:toolbar
-    width: 320
+    width:320// parent.width
     height: 40
 
     onFocusChanged: {
@@ -13,7 +13,27 @@ Item {
 
     Rectangle {
         id: rectangle1
-        color: "#0d0d0d"
+        gradient: Gradient {
+            GradientStop {
+                position: 0
+                color: "#333333"
+            }
+
+            GradientStop {
+                position: 0.54
+                color: "#111111"
+            }
+
+            GradientStop {
+                position: 0.45
+                color: "#252525"
+            }
+
+            GradientStop {
+                position: 1
+                color: "#000000"
+            }
+        }
         anchors.fill: parent
     }
 
@@ -36,4 +56,5 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         source: "pics/tag_add_24.png"
     }
+
 }
