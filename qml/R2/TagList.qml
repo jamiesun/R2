@@ -1,6 +1,6 @@
 import Qt 4.7
 import "models"
-Rectangle {
+Item {
     id:taglist
     property string auth: ''
     property string sid: ''
@@ -28,17 +28,17 @@ Rectangle {
         }
     }
 
-    gradient: Gradient {
-        GradientStop {
-            position: 0
-            color: "#363636"
-        }
+//    gradient: Gradient {
+//        GradientStop {
+//            position: 0
+//            color: "#363636"
+//        }
 
-        GradientStop {
-            position: 1
-            color: "#000000"
-        }
-    }
+//        GradientStop {
+//            position: 1
+//            color: "#000000"
+//        }
+//    }
     TagsModel{
         id:tagsModel;auth: taglist.auth;sid: taglist.sid
         onError: console.log(error)
@@ -83,15 +83,15 @@ Rectangle {
 
     }
 
-    IMenuBar {
-        id: imenubar1
-        lkey: "";rkey: "Exit"
+    MenuBar {
+        id: menubar1
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
         anchors.right: parent.right
         anchors.rightMargin: 0
         anchors.left: parent.left
         anchors.leftMargin: 0
+        type: "index"
     }
     Alert{
         id:alert;opacity: 0

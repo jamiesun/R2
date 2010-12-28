@@ -11,6 +11,7 @@ Item {
     Rectangle {
         id: bg
         radius: 10
+        opacity: 0.7
         gradient: Gradient {
             GradientStop {
                 id: gradientstop1
@@ -32,7 +33,6 @@ Item {
         anchors.bottomMargin: 1
         anchors.topMargin: 1
         anchors.fill: parent
-        opacity: 1
     }
 
     TextEdit {
@@ -55,7 +55,7 @@ Item {
         anchors.left: parent.left
         anchors.leftMargin: 10
         anchors.verticalCenter: parent.verticalCenter
-        source: "pics/rss_24.png"
+        source: "res/16/rss.png"
         opacity: rssitem.activeFocus?1:0.6
     }
 

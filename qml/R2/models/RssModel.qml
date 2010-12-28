@@ -5,7 +5,7 @@ ListModel{
     property string sid:""
     property string auth:""
     property string tag:""
-    property string source: "http://www.google.com/reader/api/0/subscription/list?output=json"
+    property string source: "https://www.google.com/reader/api/0/subscription/list?output=json"
     property string contentSource: "https://www.google.com/reader/api/0/stream/contents/"
 
 

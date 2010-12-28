@@ -1,46 +1,61 @@
 import Qt 4.7
 
-Rectangle {
-    id: rectangle1
+Item{
     width: 320
     height: 24
 
-    gradient: Gradient {
-        GradientStop {
-            position: 0
-            color: "#1e1e1e"
-        }
+    property string type: "index"
 
-        GradientStop {
-            position: 1
-            color: "#000000"
+    Component.onCompleted:{
+
+        if(type=="index"){
+            lkey.source = ""
+            rkey.source = "res/16/round_delete.png"
+        }else if(type=="rss"||type=="feed"){
+            lkey.source = "res/16/home.png"
+            rkey.source = "res/16/undo.png"
+        }else  if(type=="settings"){
+            lkey.source = "res/16/checkmark.png"
+            rkey.source = "res/16/cancel.png"
         }
     }
 
-    Button {
-        id: button1
-        x: 0
-        y: 3
-        width: 54
-        height: 19
-        text: "Menu"
-        anchors.verticalCenterOffset: 0
+    Rectangle {
+        id:bar
+        radius: 5
+        anchors.fill: parent
+        opacity: 0.7
+
+        gradient: Gradient {
+            GradientStop {
+                position: 0
+                color: "#1e1e1e"
+            }
+
+            GradientStop {
+                position: 1
+                color: "#000000"
+            }
+        }
+
+    }
+
+    Image {
+        id: lkey
         anchors.left: parent.left
-        anchors.leftMargin: 5
+        anchors.leftMargin: 10
+        opacity: 0.9
         anchors.verticalCenter: parent.verticalCenter
+        source: "res/16/home.png"
     }
 
-    Button {
-        id: button2
-        x: 266
-        y: 2
-        width: 54
-        height: 19
-        text: "Back"
+    Image {
+        id: rkey
+        opacity: 0.9
         anchors.right: parent.right
-        anchors.rightMargin: 5
+        anchors.rightMargin: 10
         anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: 0
-        anchors.leftMargin: 5
+        source: "res/16/undo.png"
     }
+
 }

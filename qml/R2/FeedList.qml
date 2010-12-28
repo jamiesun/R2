@@ -1,6 +1,6 @@
 import Qt 4.7
 import "models"
-Rectangle {
+Item {
     id:feedlist
     property alias auth: feedModel.auth
     property alias sid: feedModel.sid
@@ -70,17 +70,6 @@ Rectangle {
     }
 
 
-    gradient: Gradient {
-        GradientStop {
-            position: 0
-            color: "#363636"
-        }
-
-        GradientStop {
-            position: 1
-            color: "#000000"
-        }
-    }
 
     FeedModel{
         id:feedModel
@@ -125,9 +114,9 @@ Rectangle {
 
     }
 
-    IMenuBar {
+    MenuBar {
         id: menubar1
-        lkey: "Home";rkey: "Back"
+        type: "feed"
         anchors.right: parent.right
         anchors.rightMargin: 0
         anchors.left: parent.left

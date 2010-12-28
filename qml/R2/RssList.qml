@@ -1,6 +1,6 @@
 import Qt 4.7
 import "models"
-Rectangle {
+Item {
     id:rsslist
     property string auth: ''
     property string sid: ''
@@ -34,17 +34,6 @@ Rectangle {
     }
 
 
-    gradient: Gradient {
-        GradientStop {
-            position: 0
-            color: "#363636"
-        }
-
-        GradientStop {
-            position: 1
-            color: "#000000"
-        }
-    }
 
     RssModel{
         id:rssModel;auth: rsslist.auth;sid: rsslist.sid
@@ -89,14 +78,14 @@ Rectangle {
 
     }
 
-    IMenuBar {
+    MenuBar {
         id: menubar1
-        lkey: "";rkey: "Back"
         anchors.right: parent.right
         anchors.rightMargin: 0
         anchors.left: parent.left
         anchors.leftMargin: 0
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
+        type: "rss"
     }
 }

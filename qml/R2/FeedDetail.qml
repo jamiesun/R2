@@ -9,21 +9,31 @@ Flickable {
     pressDelay: 200
     smooth: true
 
-    Behavior on contentY{NumberAnimation{duration: 300}}
+    Behavior on contentY{NumberAnimation{duration: 400;easing.type: Easing.InOutQuart}}
 
     signal next()
     signal previous()
     signal back()
     signal home()
 
+    Keys.onSelectPressed:{
+        feedMenu.show()
+    }
+
     Keys.onPressed:{
         if(event.key == '17825793'){
+            feedMenu.hide()
             back()
         }
         if(event.key == '17825792'){
+            feedMenu.hide()
             home()
         }
     }
+
+
+
+
 
     function setContent(content){
         web_view.html = "<style> body{font-size：12px;} img{max-width:"+(flickable.parent.width-20)+"px;} </style>"+content
@@ -36,17 +46,17 @@ Flickable {
         opacity: web_view.opacity
     }
 
-//    property int histx : 0
-//    property int histy : 0
+    property int histx : 0
+    property int histy : 0
 
-//    function resetTbar(){
-//        menubar.x += contentX-histx
-//        menubar.y += contentY-histy
-//        histx = contentX
-//        histy = contentY
-//    }
-//    onContentXChanged: resetTbar()
-//    onContentYChanged: resetTbar()
+    function resetTbar(){
+        feedMenu.x += contentX-histx
+        feedMenu.y += contentY-histy
+        histx = contentX
+        histy = contentY
+    }
+    onContentXChanged: resetTbar()
+    onContentYChanged: resetTbar()
 
 
     onFocusChanged: {
@@ -96,9 +106,6 @@ Flickable {
         }
 
 
-
-
-
     }
 
 
@@ -107,5 +114,18 @@ Flickable {
         anchors.fill: parent
         show: web_view.progress<1
     }
+
+    FeedMenu{
+        id:feedMenu
+        opacity: 0
+        x:(flickable.parent.width - feedMenu.width)/2
+        y:(flickable.parent.height - feedMenu.height)/2
+
+        onClose: {
+            feedMenu.hide()
+            flickable.forceActiveFocus()
+        }
+    }
+
 
 }

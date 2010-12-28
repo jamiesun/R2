@@ -4,7 +4,7 @@ ListModel{
     id:tagsModel
     property string sid:""
     property string auth:""
-    property string source: "http://www.google.com/reader/api/0/tag/list?output=json"
+    property string source: "https://www.google.com/reader/api/0/tag/list?output=json"
     property bool busy: false
     signal error(string error)
 
@@ -33,13 +33,14 @@ ListModel{
                 }else if(http.status==401){
                     error("401 error")
                 } else{
-                    error("update error")
+                    error("tags update error")
                 }
                 tagsModel.busy = false
             }else{
                 tagsModel.busy = true
             }
         }
+        console.log("http GET "+source)
         http.open("GET", source);
         http.setRequestHeader("Authorization","GoogleLogin auth="+auth);
         http.setRequestHeader("Cookie","SID="+sid);

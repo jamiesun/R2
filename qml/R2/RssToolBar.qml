@@ -55,11 +55,11 @@ Item {
 
     Image {
         id: reload
-        opacity:activeFocus?1:0.8
+        opacity:activeFocus?1:0.7
         anchors.left: parent.left
         anchors.leftMargin: 10
         anchors.verticalCenter: parent.verticalCenter
-        source: "pics/reload_24.png"
+        source: "res/16/playback_reload.png"
         Keys.onSelectPressed:toolbar.reload()
     }
 }

@@ -168,10 +168,9 @@ Item {
         }
     }
 
-    IMenuBar {
+    MenuBar {
         id: imenubar1
-        rkey: "Back"
-        lkey: "Ok"
+        type: "settings"
         anchors.left: parent.left
         anchors.leftMargin: 0
         anchors.right: parent.right

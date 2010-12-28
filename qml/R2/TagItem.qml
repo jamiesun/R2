@@ -15,6 +15,7 @@ FocusScope {
     Rectangle {
         id: rectangle1
         radius: 5
+        opacity: 0.7
         gradient: Gradient {
             GradientStop {
                 id: gradientstop1
@@ -37,15 +38,16 @@ FocusScope {
 
     Image {
         id: tagimg
-        x: 7
-        y: 4
         opacity: tagItem.activeFocus?1:0.5
+        anchors.left: parent.left
+        anchors.leftMargin: 10
         anchors.verticalCenter: parent.verticalCenter
-        source: "pics/tag_24.png"
+        source: "res/tag_24.png"
     }
 
     Text {
         id: title
+        smooth: true
         width: 80
         height: 20
         color: "#ffffff"
@@ -58,12 +60,13 @@ FocusScope {
 
     Image {
         id: go
+        width: 24;height: 24
         scale: tagItem.activeFocus?0.6:0.4
         anchors.right: parent.right
         anchors.rightMargin: 5
         anchors.verticalCenter: parent.verticalCenter
-        source: "pics/video_play_24.png"
-        opacity: tagItem.activeFocus?1:0.5
+        source: "res/br_next.png"
+        opacity: tagItem.activeFocus?0.9:0.5
     }
 
 

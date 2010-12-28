@@ -13,6 +13,12 @@ Rectangle {
     property string feedMax: "30"
 
     property string stateUrl: "https://www.google.com/reader/api/0/stream/contents/user/-/state/com.google/"
+
+    Image {
+        id: name
+        source: "res/bg.jpg"
+    }
+
     gradient: Gradient {
         GradientStop {
             position: 0
@@ -130,6 +136,7 @@ Rectangle {
 
     FeedDetail{
         id:feedDetail
+        opacity: 0
         hide:main.state!="showItem"
         anchors.fill: parent
         onPrevious: feedDetail.setContent(feedlist.previous())
@@ -179,21 +186,30 @@ Rectangle {
             name: "showFeedList"
             PropertyChanges {target: feedlist;opacity: 1;focus:true}
             PropertyChanges {target: rsslist;opacity: 0}
+            PropertyChanges {target: taglist;opacity: 0}
+            PropertyChanges {target: settings;opacity: 0}
         },
         State {
             name: "showFeedList2"
             PropertyChanges {target: feedlist;opacity: 1;focus:true;onBack:main.state="showMain"}
             PropertyChanges {target: rsslist;opacity: 0}
+            PropertyChanges {target: taglist;opacity: 0}
+            PropertyChanges {target: settings;opacity: 0}
         },
         State {
             name: "showItem"
             PropertyChanges {target: feedDetail;opacity: 1;focus:true}
             PropertyChanges {target: feedlist;opacity: 0}
+            PropertyChanges {target: rsslist;opacity: 0}
+            PropertyChanges {target: taglist;opacity: 0}
+            PropertyChanges {target: settings;opacity: 0}
         },
         State {
             name: "showSettings"
             PropertyChanges {target: settings;opacity: 1;focus:true}
             PropertyChanges {target: taglist;opacity: 0}
+            PropertyChanges {target: feedlist;opacity: 0}
+            PropertyChanges {target: rsslist;opacity: 0}
         }
 
 
