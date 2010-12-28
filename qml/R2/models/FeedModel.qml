@@ -29,8 +29,37 @@ ListModel {
                 content = summary.content
             }
 
-
-            feedModel.append({ititle:ititle,icontent:content,iid:itemid,istreamId:istreamId})
+            var isRead = false
+            var isShare = false
+            var isStar = false
+            var isLike = false
+            var categories = items[i].categories
+            for(var k=0;k<categories.length;k++){
+                if(categories[k].search("read$")!=-1){
+                    isRead = true
+                }
+                if(categories[k].search("like$")!=-1){
+                    isLike = true
+                }
+                if(categories[k].search("starred$")!=-1){
+                    isStar = true
+                }
+                if(categories[k].search("broadcast$")!=-1){
+                    isShare = true
+                }
+            }
+            var mobj = {}
+            mobj.auth = auth
+            mobj.sid = sid
+            mobj.title = ititle
+            mobj.content = content
+            mobj.id = itemid
+            mobj.streamId = istreamId
+            mobj.isRead = isRead
+            mobj.isLike = isLike
+            mobj.isStar = isStar
+            mobj.isShare = isShare
+            feedModel.append(mobj)
         }
     }
 

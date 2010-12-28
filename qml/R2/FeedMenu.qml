@@ -4,6 +4,9 @@ Item {
     id: menu
     width: 160
     height: 190
+    property bool isShare: false
+    property bool isStar: false
+    property bool isLike: false
 
     signal close()
     signal share()
@@ -67,7 +70,7 @@ Item {
 
     MenuItem {
         id: share
-        txt: "Share"
+        txt: isShare?"Unshare":"Share"
         icon: "res/16/share.png"
         opacity: activeFocus?1:0.7
         anchors.top: closed.bottom
@@ -76,13 +79,16 @@ Item {
         anchors.leftMargin: 10
         anchors.right: parent.right
         anchors.rightMargin: 10
-        Keys.onSelectPressed:menu.share()
+        Keys.onSelectPressed:{
+            menu.share()
+            menu.close()
+        }
         KeyNavigation.down:like;KeyNavigation.up:closed
     }
 
     MenuItem {
         id: like
-        txt: "like"
+        txt: isLike?"Unlike":"like"
         icon: "res/16/star_fav_empty.png"
         opacity: activeFocus?1:0.7
         anchors.top: share.bottom
@@ -91,14 +97,17 @@ Item {
         anchors.topMargin: 5
         anchors.rightMargin: 10
         anchors.leftMargin: 10
-        Keys.onSelectPressed:menu.like()
+        Keys.onSelectPressed:{
+            menu.like()
+            menu.close()
+        }
         KeyNavigation.down:star;KeyNavigation.up:share
     }
 
     MenuItem {
         id: star
         icon: "res/16/heart_empty.png"
-        txt: "star"
+        txt: isStar?"Unstar":"star"
         opacity: activeFocus?1:0.7
         anchors.top: like.bottom
         anchors.left: parent.left
@@ -106,7 +115,10 @@ Item {
         anchors.topMargin: 5
         anchors.rightMargin: 10
         anchors.leftMargin: 10
-        Keys.onSelectPressed:menu.star()
+        Keys.onSelectPressed:{
+            menu.star()
+            menu.close()
+        }
         KeyNavigation.down:email;KeyNavigation.up:like
     }
     MenuItem {
@@ -120,9 +132,13 @@ Item {
         anchors.topMargin: 5
         anchors.rightMargin: 10
         anchors.leftMargin: 10
-        Keys.onSelectPressed:menu.email()
+        Keys.onSelectPressed:{
+            menu.email()
+            menu.close()
+        }
         KeyNavigation.down:comment;KeyNavigation.up:star
     }
+
     MenuItem {
         id: comment
         icon: "res/16/spechbubble_sq_line.png"
@@ -134,7 +150,10 @@ Item {
         anchors.topMargin: 5
         anchors.rightMargin: 10
         anchors.leftMargin: 10
-        Keys.onSelectPressed:menu.comment()
+        Keys.onSelectPressed:{
+            menu.comment()
+            menu.close()
+        }
         KeyNavigation.down:closed;KeyNavigation.up:email
     }
 }

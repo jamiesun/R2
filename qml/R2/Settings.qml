@@ -2,20 +2,20 @@ import Qt 4.7
 Item {
     id:config
     width: 240;height: 320
-    property string email: ""
-    property string passwd: ""
-    property string feedMax: "30"
+    property alias email: email_.text
+    property alias passwd: passwd_.text
+    property string feedMax: fnum.text
     signal finish()
     signal cancel()
     signal save(string cfgData)
     Behavior on opacity{NumberAnimation{duration: 200}}
 
     function doSave(){
-        if(email.text==""){ebox.forceActiveFocus();}
-        else if(passwd.text==""){pbox.forceActiveFocus();}
+        if(email_.text==""){ebox.forceActiveFocus();}
+        else if(passwd_.text==""){pbox.forceActiveFocus();}
         else{
             var fnums = fnum.text?fnum.text:"30"
-            save(email.text+","+passwd.text+","+fnums)
+            save(email_.text+","+passwd_.text+","+fnums)
         }
     }
 
@@ -29,7 +29,7 @@ Item {
 
     onFocusChanged: {
         if(activeFocus){
-            email.forceActiveFocus()
+            email_.forceActiveFocus()
         }
     }
 
@@ -55,7 +55,7 @@ Item {
         Rectangle {
             id: ebox
             height: 30
-            color: email.activeFocus?"#ffffff":"#dbdbdb"
+            color: email_.activeFocus?"#ffffff":"#dbdbdb"
             radius: 5
             anchors.top: text1.bottom
             anchors.topMargin: 8
@@ -64,11 +64,11 @@ Item {
             anchors.left: parent.left
             anchors.leftMargin: 20
             border.color: "#403e3e"
-            border.width: email.activeFocus?1:0
+            border.width: email_.activeFocus?1:0
 
             TextInput {
-                id: email
-                text: config.email
+                id: email_
+                text: ""
                 cursorVisible: activeFocus
                 anchors.rightMargin: 5
                 anchors.leftMargin: 5
@@ -76,7 +76,7 @@ Item {
                 anchors.topMargin: 5
                 anchors.fill: parent
                 font.pointSize:7
-                KeyNavigation.down:passwd;KeyNavigation.up:nums
+                KeyNavigation.down:passwd_;KeyNavigation.up:nums
             }
         }
 
@@ -95,7 +95,7 @@ Item {
         Rectangle {
             id: pbox
             height: 30
-            color: passwd.activeFocus?"#ffffff":"#dbdbdb"
+            color: passwd_.activeFocus?"#ffffff":"#dbdbdb"
             radius: 5
             anchors.top: text2.bottom
             anchors.topMargin: 8
@@ -104,11 +104,11 @@ Item {
             anchors.left: parent.left
             anchors.leftMargin: 20
             border.color: "#403e3e"
-            border.width: passwd.activeFocus?1:0
+            border.width: passwd_.activeFocus?1:0
 
             TextInput {
-                id: passwd;focus: pbox.activeFocus
-                text: config.passwd
+                id: passwd_;focus: pbox.activeFocus
+                text: ""
                 echoMode: TextInput.PasswordEchoOnEdit
                 cursorVisible: activeFocus
                 font.pointSize:7
@@ -117,7 +117,7 @@ Item {
                 anchors.rightMargin: 5
                 anchors.bottomMargin: 5
                 anchors.leftMargin: 5
-                KeyNavigation.up:email;KeyNavigation.down:fnum
+                KeyNavigation.up:email_;KeyNavigation.down:fnum
             }
         }
 
@@ -146,10 +146,10 @@ Item {
             anchors.top: text3.bottom
             border.color: "#403e3e"
             anchors.topMargin: 8
-            KeyNavigation.up:passwd;KeyNavigation.down:email
+            KeyNavigation.up:passwd_;KeyNavigation.down:email_
             TextInput {
                 id: fnum
-                text: feedMax
+                text: "30"
                 validator: IntValidator{bottom: 10; top: 1000;}
                 cursorVisible: activeFocus
                 font.pointSize:7

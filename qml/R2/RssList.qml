@@ -5,7 +5,6 @@ Item {
     property string auth: ''
     property string sid: ''
     property string tag: ""
-    property string source: "rss.xml"
     Behavior on opacity{NumberAnimation{duration: 200}}
     width: 320
     height: 240
@@ -13,9 +12,9 @@ Item {
     signal home()
     signal itemClick(string title,string url)
 
-    function filter(tag){
+    function filter(tag,unreads){
         rsslist.tag = tag
-        rssModel.filter(tag)
+        rssModel.filter(tag,unreads)
     }
 
     onFocusChanged: {

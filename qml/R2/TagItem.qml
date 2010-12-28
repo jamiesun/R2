@@ -42,7 +42,7 @@ FocusScope {
         anchors.left: parent.left
         anchors.leftMargin: 10
         anchors.verticalCenter: parent.verticalCenter
-        source: "res/tag_24.png"
+        source: "res/16/tag.png"
     }
 
     Text {
@@ -60,12 +60,11 @@ FocusScope {
 
     Image {
         id: go
-        width: 24;height: 24
         scale: tagItem.activeFocus?0.6:0.4
         anchors.right: parent.right
         anchors.rightMargin: 5
         anchors.verticalCenter: parent.verticalCenter
-        source: "res/br_next.png"
+        source: "res/16/br_next.png"
         opacity: tagItem.activeFocus?0.9:0.5
     }
 

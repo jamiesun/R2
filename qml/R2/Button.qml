@@ -11,13 +11,13 @@ Item {
 
     BorderImage {
         id: buttonImage
-        source: "pics/toolbutton.sci"
+        source: "res/toolbutton.sci"
         width: container.width; height: container.height
     }
     BorderImage {
         id: pressed
         opacity: 0
-        source: "pics/toolbutton.sci"
+        source: "res/toolbutton.sci"
         width: container.width; height: container.height
     }
     MouseArea {

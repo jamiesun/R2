@@ -10,6 +10,6 @@ Item {
         x: 0
         y: 0
         anchors.centerIn: parent
-        source: "pics/loading.gif"
+        source: "res/loading.gif"
     }
 }

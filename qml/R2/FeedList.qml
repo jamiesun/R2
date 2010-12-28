@@ -7,27 +7,21 @@ Item {
     property string token: ""
     property string title: ""
     property alias feedMax: feedModel.feedMax
-
-
     Behavior on opacity{NumberAnimation{duration: 200}}
     width: 320
     height: 240
     signal back()
     signal home()
-    signal itemClick(string content)
+    signal itemClick()
 
+    function getCurrentObj(){
+        var obj = feedModel.get(list_view.currentIndex)
+        obj.token = token
+        return obj;
+    }
 
-    WorkerScript {
-        id: actionWork
-        source: "edittag.js"
-        onMessage: {
-            if(messageObject.code==0){
-                console.log("action success")
-            }
-            else{
-                console.log("action faild");
-            }
-        }
+    function setCurrentObj(obj){
+        feedModel.set(list_view.currentIndex,obj)
     }
 
     function update(title,url){
@@ -35,23 +29,11 @@ Item {
         feedModel.update(url)
     }
 
-    function clickitem(){
-        var it =  list_view.currentItem;
-        itemClick("<h3>"+it.title+"</h3>"+it.content)
-        actionWork.sendMessage({auth:main.auth,sid:main.sid,token:main.token,action:"read",entry:it.itid,streamId:it.streamId})
-    }
-
     function previous(){
         list_view.decrementCurrentIndex();
-        var it =  list_view.currentItem;
-        actionWork.sendMessage({auth:main.auth,sid:main.sid,token:main.token,action:"read",entry:it.itid,streamId:it.streamId})
-        return "<h3>"+it.title+"</h3>"+it.content
     }
     function next(){
         list_view.incrementCurrentIndex();
-        var it =  list_view.currentItem;
-        actionWork.sendMessage({auth:main.auth,sid:main.sid,token:main.token,action:"read",entry:it.itid,streamId:it.streamId})
-        return "<h3>"+it.title+"</h3>"+it.content
     }
 
     onFocusChanged: {
@@ -101,8 +83,8 @@ Item {
         model: feedModel
         delegate: FeedItem{
             id:feedItem
-            Keys.onRightPressed:clickitem()
-            Keys.onSelectPressed:clickitem()
+            Keys.onRightPressed:itemClick()
+            Keys.onSelectPressed:itemClick()
         }
 
         KeyNavigation.left:rsstoolbar

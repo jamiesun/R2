@@ -8,15 +8,21 @@ ListModel{
     property string source: "https://www.google.com/reader/api/0/subscription/list?output=json"
     property string contentSource: "https://www.google.com/reader/api/0/stream/contents/"
 
-
+    property variant unreads: {}
     property bool busy: false
     property string cacheKey: "rssCache"
     signal error(string error)
 
+    function getCount(id){
+        if(!unreads)return 0
+        var tmp = unreads[Qt.md5(id)]
+        return tmp?parseInt(tmp):0
+    }
 
 
-    function filter(tag){
+    function filter(tag,unreads){
         rssModel.tag = tag
+        rssModel.unreads = unreads
         var result = Cache.get(cacheKey)
         if(result){
             filter2(tag,result)
@@ -28,19 +34,22 @@ ListModel{
 
     function filter2(tag,result){
         rssModel.clear()
-        rssModel.append({feedtitle:"All items",feedid:contentSource+"user/-/label/"+tag})
+        var counttotle = 0
         for(var i=0;i<result.length;i++){
             var rss = result[i]
             var categories = rss.categories
             if(categories&&categories.length>0){
                 for(var k=0;k<categories.length;k++){
                     if(categories[k].label==tag){
-                        rssModel.append({feedtitle:rss.title,feedid:contentSource+rss.id})
+                        var ct = getCount(rss.id)
+                        rssModel.append({feedtitle:rss.title,feedid:contentSource+rss.id,count:ct})
+                        counttotle += ct
                         break
                     }
                 }
             }
         }
+        rssModel.insert(0,{feedtitle:"All items",feedid:contentSource+"user/-/label/"+tag,count:counttotle})
     }
 
     function update(){

@@ -39,7 +39,7 @@ Item {
         id: title
         clip: false
         color: "#f5ecec"
-        text: rssitem.title
+        text: rssitem.title + (count?" ("+count+")":"")
         anchors.right: parent.right
         anchors.rightMargin: 10
         anchors.left: feedImg.right
@@ -58,6 +58,7 @@ Item {
         source: "res/16/rss.png"
         opacity: rssitem.activeFocus?1:0.6
     }
+
 
     states: [
         State {

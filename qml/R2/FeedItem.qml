@@ -3,14 +3,8 @@ import Qt 4.7
 Item {
     id: feeditem
     width: parent.width
-    height: activeFocus?title.height+20:title.height+10
+    height: activeFocus?title_.height+20:title_.height+10
     Behavior on height{NumberAnimation{duration: 200}}
-    property string title: ititle
-    property string content: icontent
-    property string itid: iid
-    property string streamId: istreamId
-
-
 
     Rectangle {
         id: bg
@@ -40,10 +34,10 @@ Item {
     }
 
     TextEdit {
-        id: title
+        id: title_
         clip: false
         color: "#f5ecec"
-        text: feeditem.title
+        text: title
         anchors.right: parent.right
         anchors.rightMargin: 10
         anchors.left: feedImg.right
@@ -59,7 +53,7 @@ Item {
         anchors.leftMargin: 10
         anchors.verticalCenterOffset: 0
         anchors.verticalCenter: parent.verticalCenter
-        source: "res/16/document.png"
+        source: isRead?"res/16/document.png":"res/16/doc_new.png"
         opacity: feeditem.activeFocus?1:0.6
     }
 

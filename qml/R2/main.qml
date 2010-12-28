@@ -1,5 +1,6 @@
 import Qt 4.7
 import Utils 1.0
+import "json2.js" as Json
 Rectangle {
     id: main
     width: 320
@@ -11,6 +12,7 @@ Rectangle {
     property string sid: ''
     property string token: ''
     property string feedMax: "30"
+    property variant unreads: {}
 
     property string stateUrl: "https://www.google.com/reader/api/0/stream/contents/user/-/state/com.google/"
 
@@ -35,8 +37,30 @@ Rectangle {
         console.log(event.key)
     }
 
-
     Utils{id:utils}
+
+    WorkerScript {
+        id: unreadWork
+        source: "unread.js"
+        onMessage: {
+            if(messageObject.unreads){
+                console.log("unread success")
+                var tmp = JSON.parse(messageObject.unreads)['unreadcounts']
+                if(tmp){
+                    var urtmp = {}
+                    for(var ikey in tmp){
+                        var uit = tmp[ikey]
+                        urtmp[Qt.md5(uit.id)] = uit.count
+                    }
+                    main.unreads = urtmp
+                }
+
+            }
+            else{
+                console.log("unread faild");
+            }
+        }
+    }
 
     WorkerScript {
         id: tokenWork
@@ -61,6 +85,7 @@ Rectangle {
                 main.auth = messageObject.auth;
                 main.sid = messageObject.sid;
                 tokenWork.sendMessage({auth:main.auth,sid:main.sid})
+                unreadTimer.start()
                 taglist.updateModel(main.auth,main.sid)
             }
             else{
@@ -71,7 +96,11 @@ Rectangle {
         }
     }
 
-
+    Timer {
+        id:unreadTimer;triggeredOnStart:true
+        interval: 1000*60; running: false; repeat: true
+        onTriggered: unreadWork.sendMessage({auth:main.auth,sid:main.sid})
+    }
 
     function initConfig(){
         var cfgstr = utils.safeRead(".config")
@@ -104,7 +133,7 @@ Rectangle {
                 feedlist.update(tag,stateUrl+tag)
             }else{
                 main.state = "showRsslist"
-                rsslist.filter(tag)
+                rsslist.filter(tag,main.unreads)
                 rsslist.forceActiveFocus()
             }
         }
@@ -129,7 +158,7 @@ Rectangle {
         onBack:main.state = "showRsslist"
         onItemClick: {
             main.state = "showItem"
-            feedDetail.setContent(content)
+            feedDetail.update(feedlist.getCurrentObj())
         }
         onHome:main.state = "showMain"
     }
@@ -139,8 +168,20 @@ Rectangle {
         opacity: 0
         hide:main.state!="showItem"
         anchors.fill: parent
-        onPrevious: feedDetail.setContent(feedlist.previous())
-        onNext: feedDetail.setContent(feedlist.next())
+        onPrevious: {
+            feedlist.previous()
+            feedDetail.update(feedlist.getCurrentObj())
+        }
+
+        onNext: {
+            feedlist.next()
+            feedDetail.update(feedlist.getCurrentObj())
+        }
+
+        onModelChanged: {
+            feedlist.setCurrentObj(obj)
+        }
+
         onBack: {
             if(feedlist.title=="starred"||feedlist.title=="broadcast"||feedlist.title=="created"){
                 main.state = "showFeedList2";
@@ -153,6 +194,7 @@ Rectangle {
 
     Settings{
         id:settings
+        email: main.email;passwd: main.passwd;feedMax: main.feedMax
         opacity: 0
         anchors.fill: parent
         onCancel:main.state = "showMain"

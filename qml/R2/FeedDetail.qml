@@ -2,6 +2,7 @@ import Qt 4.7
 import QtWebKit 1.0
 Flickable {
     property bool hide: true
+    property variant currentObj: {}
     id: flickable
     width: parent.width
     contentWidth: Math.max(parent.width,web_view.width)
@@ -15,6 +16,20 @@ Flickable {
     signal previous()
     signal back()
     signal home()
+    signal modelChanged(variant obj)
+
+    WorkerScript {
+        id: actionWork
+        source: "edittag.js"
+        onMessage: {
+            if(messageObject.code==0){
+                console.log("action success")
+            }
+            else{
+                console.log("action faild");
+            }
+        }
+    }
 
     Keys.onSelectPressed:{
         feedMenu.show()
@@ -31,14 +46,31 @@ Flickable {
         }
     }
 
-
-
-
-
-    function setContent(content){
-        web_view.html = "<style> body{font-size：12px;} img{max-width:"+(flickable.parent.width-20)+"px;} </style>"+content
-        //web_view.evaluateJavaScript("location.reload();")
+    function copyObj(obj,dest){
+        for(var k in obj){
+            dest[k] = obj[k]
+        }
     }
+
+
+    function update(mobj){
+        if(!mobj)return
+        currentObj = mobj
+        if(!currentObj.isRead){
+            var msg = {action:true,option:"read"}
+            copyObj(currentObj,msg)
+            actionWork.sendMessage(msg)
+            currentObj.isRead = true
+            modelChanged(currentObj)
+        }
+        web_view.html = "<style> body{font-size：12px;} img{max-width:"
+                  + (flickable.parent.width-20)
+                  + "px;} </style>"
+                  + "<h3>"+currentObj.title+"</h3>"
+                  + currentObj.content
+
+    }
+
 
     Rectangle{
         anchors.fill: parent
@@ -120,11 +152,39 @@ Flickable {
         opacity: 0
         x:(flickable.parent.width - feedMenu.width)/2
         y:(flickable.parent.height - feedMenu.height)/2
+        isShare: currentObj.isShare
+        isStar: currentObj.isStar
+        isLike: currentObj.isLike
 
         onClose: {
             feedMenu.hide()
             flickable.forceActiveFocus()
         }
+
+        onShare:{
+            var msg = {action:!currentObj.isShare,option:"broadcast"}
+            copyObj(currentObj,msg)
+            actionWork.sendMessage(msg)
+            currentObj.isShare = !currentObj.isShare
+            modelChanged(currentObj)
+        }
+        onStar:{
+            var msg = {action:!currentObj.isStar,option:"starred"}
+            copyObj(currentObj,msg)
+            actionWork.sendMessage(msg)
+            currentObj.isStar = !currentObj.isStar
+            modelChanged(currentObj)
+        }
+
+        onLike:{
+            var msg = {action:!currentObj.isLike,option:"like"}
+            copyObj(currentObj,msg)
+            actionWork.sendMessage(msg)
+            currentObj.isLike = !currentObj.isLike
+            modelChanged(currentObj)
+        }
+
+
     }
 
 
