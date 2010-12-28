@@ -153,4 +153,9 @@ OTHER_FILES += \
     qml/R2/res/16/app_window.png \
     qml/R2/unread.js \
     qml/R2/MenuItem.qml \
-    qml/R2/FeedMenu.qml
+    qml/R2/FeedMenu.qml \
+    qml/R2/res/toolbutton.sci \
+    qml/R2/res/toolbutton.png \
+    qml/R2/res/titlebar.sci \
+    qml/R2/res/titlebar.png \
+    qml/R2/res/loading.gif
