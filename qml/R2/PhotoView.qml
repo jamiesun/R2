@@ -7,13 +7,22 @@ Rectangle {
     Behavior on opacity{NumberAnimation{duration: 200}}
     signal close()
 
-
     function update(images){
         itemModel.clear()
         for(var k in images){
             itemModel.append({src:images[k]})
         }
 
+    }
+
+    function show(){
+        opacity = 1
+        view.forceActiveFocus()
+    }
+
+    function hide(){
+        opacity = 0
+        focus = false
     }
 
     onFocusChanged: {

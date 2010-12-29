@@ -38,10 +38,12 @@ Flickable {
     Keys.onPressed:{
         if(photo_view.activeFocus)return
         if(event.key == '17825793'){
+            photo_view.hide()
             feedMenu.hide()
             back()
         }
         if(event.key == '17825792'){
+            photo_view.hide()
             feedMenu.hide()
             home()
         }
@@ -135,8 +137,7 @@ Flickable {
         x: 0;y: 0
         KeyNavigation.down:flickable
         onPhotoChicked: {
-            photo_view.opacity = 1
-            photo_view.forceActiveFocus()
+            photo_view.show()
             photo_view.update(flickable.images)
         }
     }
@@ -190,9 +191,11 @@ Flickable {
         width: flickable.parent.width
         height: flickable.parent.height
         onClose: {
-            opacity = 0
+            photo_view.hide()
             flickable.forceActiveFocus()
         }
+
+
 
     }
 
