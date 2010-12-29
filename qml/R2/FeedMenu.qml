@@ -4,9 +4,12 @@ Item {
     id: menu
     width: 160
     height: 190
+    scale:0.5
     property bool isShare: false
     property bool isStar: false
     property bool isLike: false
+    Behavior on opacity{NumberAnimation{duration: 200}}
+    Behavior on scale{NumberAnimation{duration: 200}}
 
     signal close()
     signal share()
@@ -17,12 +20,14 @@ Item {
 
     function show(){
         menu.opacity = 1
+        menu.scale = 1
         menu.focus = true
     }
 
     function hide()
     {
         menu.opacity = 0
+        menu.scale = 0.5
         menu.focus = false
     }
 

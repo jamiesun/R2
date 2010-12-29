@@ -98,7 +98,7 @@ Rectangle {
 
     Timer {
         id:unreadTimer;triggeredOnStart:true
-        interval: 1000*60; running: false; repeat: true
+        interval: 1000*60*3; running: false; repeat: true
         onTriggered: unreadWork.sendMessage({auth:main.auth,sid:main.sid})
     }
 
@@ -216,6 +216,7 @@ Rectangle {
             name: "showRsslist"
             PropertyChanges {target: taglist;opacity: 0}
             PropertyChanges {target: rsslist;opacity: 1;focus:true}
+            PropertyChanges {target: feedlist;opacity: 0}
         },
         State {
             name: "showMain"

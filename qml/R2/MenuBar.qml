@@ -24,7 +24,7 @@ Item{
         id:bar
         radius: 5
         anchors.fill: parent
-        opacity: 0.7
+        opacity: 0.9
 
         gradient: Gradient {
             GradientStop {
