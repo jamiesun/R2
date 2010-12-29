@@ -3,7 +3,7 @@ import Qt 4.7
 Item {
     id: loading
     property bool show: false
-    width: 320
+    width: parent.width
     opacity: show?1:0
     AnimatedImage {
         id: loadimg

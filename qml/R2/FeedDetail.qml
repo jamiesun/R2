@@ -9,7 +9,7 @@ Flickable {
     contentWidth: Math.max(parent.width,ctx_view.width)
     contentHeight: Math.max(parent.height,ctx_view.height)
 
-    Behavior on contentY{NumberAnimation{duration: 400;easing.type: Easing.InOutQuart}}
+    Behavior on contentY{NumberAnimation{duration: 500;easing.type: Easing.InOutQuart}}
 
     signal next()
     signal previous()
@@ -31,10 +31,12 @@ Flickable {
     }
 
     Keys.onSelectPressed:{
+        if(photo_view.activeFocus)return
         feedMenu.show()
     }
 
     Keys.onPressed:{
+        if(photo_view.activeFocus)return
         if(event.key == '17825793'){
             feedMenu.hide()
             back()
@@ -67,20 +69,24 @@ Flickable {
         var re = /<IMG(.*?)src=\"*(.*?)\"*(\s|>)/gi
         var re2 = /<IMG(.*?)>/gi
 
+        var ms = currentObj.content.match(re)
         if(ms){
-            var ms = currentObj.content.match(re)
             for(var i =0 ;i<ms.length;i++){
-                imgs.push(RegExp.$2)
+                if(imgs.indexOf(RegExp.$2)==-1)
+                    imgs.push(RegExp.$2)
             }
             flickable.images = imgs
         }
+        ctx_view.hasImage = imgs.length>0
 
 
-        ctx.text = "<style> body{font-size：12px;} img{max-width:"
+        ctx_view.content = "<html><head><style> body{font-size：12px;} img{max-width:"
                   + (flickable.parent.width-20)
-                  + "px;} </style>"
-                  + "<h3>"+currentObj.title+"</h3>"
+                  + "px;} </style></head>"
+                  + "<body><h3>"+currentObj.title+"</h3>"
                   + currentObj.content.replace(re2,"")
+                  + "</body>"
+
 
         flickable.contentX = 0
         flickable.contentY = 0
@@ -101,50 +107,40 @@ Flickable {
     onContentYChanged: resetTbar()
 
 
-//    onFocusChanged: {
-//        if(activeFocus){
-//            ctx_view.forceActiveFocus()
-//        }
-
-//    }
-
     Keys.onUpPressed:{
-        if(!flickable.atYBeginning)
-            flickable.contentY -= 40;
+        if(photo_view.activeFocus)return
+        if(!atYBeginning)
+            contentY -= Math.min(parent.height,Math.abs(contentY));
+        else
+            ctx_view.focus = true
     }
     Keys.onDownPressed:{
-        if(!flickable.atYEnd)
-            flickable.contentY += 40;
+        if(photo_view.activeFocus)return
+        if(!atYEnd)
+            contentY += Math.min(parent.height,Math.abs(parent.height-(contentHeight-contentY)));
     }
 
     Keys.onLeftPressed:{
-        flickable.previous()
+        if(photo_view.activeFocus)return
+        previous()
     }
     Keys.onRightPressed:{
-        flickable.next()
+        if(photo_view.activeFocus)return
+        next()
     }
 
-    Rectangle {
+    FeedView{
         id: ctx_view
-        radius: 10
+        radius:5
         x: 0;y: 0
-        width: flickable.parent.width
-        height: Math.max(flickable.parent.height,ctx.height+20)
-        Behavior on opacity{NumberAnimation{duration: 200}}
-
-        TextEdit {
-            id: ctx
-            x: 5;y: 5
-            width: parent.width-10
-            color: "#000000"
-            text: ""
-            clip: false
-            readOnly: true
-            textFormat: TextEdit.RichText
-            font.pointSize: 9
-            wrapMode: TextEdit.WrapAnywhere
+        KeyNavigation.down:flickable
+        onPhotoChicked: {
+            photo_view.opacity = 1
+            photo_view.forceActiveFocus()
+            photo_view.update(flickable.images)
         }
     }
+
 
 
     FeedMenu{
@@ -152,14 +148,13 @@ Flickable {
         opacity: 0
         x:(flickable.parent.width - feedMenu.width)/2
         y:(flickable.parent.height - feedMenu.height)/2
-        isShare: currentObj.isShare
-        isStar: currentObj.isStar
-        isLike: currentObj.isLike
+        isShare: currentObj?currentObj.isShare:false
+        isStar: currentObj?currentObj.isStar:false
+        isLike: currentObj?currentObj.isLike:false
 
         onClose: {
             feedMenu.hide()
             flickable.forceActiveFocus()
-            console.log(flickable.images[0])
         }
 
         onShare:{
@@ -185,6 +180,19 @@ Flickable {
             modelChanged(currentObj)
         }
 
+
+    }
+
+    PhotoView{
+        id:photo_view
+        x:0;y:0
+        opacity: 0
+        width: flickable.parent.width
+        height: flickable.parent.height
+        onClose: {
+            opacity = 0
+            flickable.forceActiveFocus()
+        }
 
     }
 

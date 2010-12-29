@@ -158,4 +158,7 @@ OTHER_FILES += \
     qml/R2/res/toolbutton.png \
     qml/R2/res/titlebar.sci \
     qml/R2/res/titlebar.png \
-    qml/R2/res/loading.gif
+    qml/R2/res/loading.gif \
+    qml/R2/FeedView.qml \
+    qml/R2/PhotoView.qml \
+    qml/R2/res/photo.png
