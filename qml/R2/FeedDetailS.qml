@@ -3,14 +3,13 @@ import QtWebKit 1.0
 Flickable {
     property bool hide: true
     property variant currentObj: {}
+    property variant images: []
     id: flickable
     width: parent.width
-    contentWidth: Math.max(parent.width,web_view.width)
-    contentHeight: Math.max(parent.height,web_view.height)
-    pressDelay: 200
-    smooth: true
+    contentWidth: Math.max(parent.width,ctx_view.width)
+    contentHeight: Math.max(parent.height,ctx_view.height)
 
-    Behavior on contentY{NumberAnimation{duration: 400;easing.type: Easing.InOutQuart}}
+    Behavior on contentY{NumberAnimation{duration: 500;easing.type: Easing.InOutQuart}}
 
     signal next()
     signal previous()
@@ -32,15 +31,19 @@ Flickable {
     }
 
     Keys.onSelectPressed:{
+        if(photo_view.activeFocus)return
         feedMenu.show()
     }
 
     Keys.onPressed:{
+        if(photo_view.activeFocus)return
         if(event.key == '17825793'){
+            photo_view.hide()
             feedMenu.hide()
             back()
         }
         if(event.key == '17825792'){
+            photo_view.hide()
             feedMenu.hide()
             home()
         }
@@ -50,6 +53,7 @@ Flickable {
         for(var k in obj){
             dest[k] = obj[k]
         }
+
     }
 
 
@@ -63,21 +67,34 @@ Flickable {
             currentObj.isRead = true
             modelChanged(currentObj)
         }
-        web_view.html = "<style> body{font-size：12px;} img{max-width:"
+
+        var imgs = []
+        var re = /<IMG(.*?)src=\"*(.*?)\"*(\s|>)/gi
+        var re2 = /<IMG(.*?)>/gi
+
+        var ms;
+        while ((ms = re.exec(currentObj.content)))  {
+            imgs.push(ms[2]);
+        }
+
+        flickable.images = imgs
+
+        ctx_view.hasImage = imgs.length>0
+
+
+        ctx_view.content = "<html><head><style> body{font-size：12px;} img{max-width:"
                   + (flickable.parent.width-20)
-                  + "px;} </style>"
-                  + "<h3>"+currentObj.title+"</h3>"
-                  + currentObj.content
-        web_view.forceActiveFocus()
+                  + "px;} </style></head>"
+                  + "<body><h3>"+currentObj.title+"</h3>"
+                  + currentObj.content.replace(re2,"")
+                  + "</body>"
+
+
+        flickable.contentX = 0
+        flickable.contentY = 0
 
     }
 
-
-    Rectangle{
-        anchors.fill: parent
-        color: "#ffffff"
-        opacity: web_view.opacity
-    }
 
     property int histx : 0
     property int histy : 0
@@ -92,56 +109,36 @@ Flickable {
     onContentYChanged: resetTbar()
 
 
-    onFocusChanged: {
-        if(activeFocus){
-            web_view.forceActiveFocus()
-        }
-
+    Keys.onUpPressed:{
+        if(!atYBeginning)
+            contentY -= Math.min(parent.height/2,Math.abs(contentY));
+        else
+            ctx_view.forceActiveFocus()
+    }
+    Keys.onDownPressed:{
+        if(!atYEnd)
+            contentY += Math.min(parent.height/2,Math.abs(parent.height-(contentHeight-contentY)));
     }
 
-    WebView {
-        id: web_view
+    Keys.onLeftPressed:{
+        previous()
+    }
+    Keys.onRightPressed:{
+        next()
+    }
+
+    FeedView{
+        id: ctx_view
+        radius:5
         x: 0;y: 0
-        opacity:  hide?0.0:1.0
-        clip: true
-        preferredWidth: flickable.width
-        preferredHeight: flickable.height+5
-//        settings.javascriptEnabled: true
-//        settings.pluginsEnabled: true
-//        renderingEnabled: true
-//        settings.privateBrowsingEnabled:true
-//        settings.localContentCanAccessRemoteUrls:true
-
-        Behavior on opacity{NumberAnimation{duration:200}}
-
-
-
-        Keys.onUpPressed:{
-            if(!flickable.atYBeginning)
-                flickable.contentY -= Math.min(flickable.parent.height/2,Math.abs(flickable.contentY));
+        KeyNavigation.down:flickable
+        onPhotoChicked: {
+            photo_view.show()
+            photo_view.update(flickable.images)
         }
-        Keys.onDownPressed:{
-            if(!flickable.atYEnd)
-                flickable.contentY += Math.min(flickable.parent.height/2,Math.abs(flickable.parent.height-(flickable.contentHeight-contentY)));
-        }
-
-        Keys.onLeftPressed:{
-            flickable.previous()
-        }
-        Keys.onRightPressed:{
-            flickable.next()
-        }
-
-
     }
 
 
-    Loading{
-        id:loading
-        x:(flickable.parent.width - loading.width)/2
-        y:(flickable.parent.height - loading.height)/2
-        show: web_view.progress<1
-    }
 
     FeedMenu{
         id:feedMenu
@@ -179,6 +176,21 @@ Flickable {
             currentObj.isLike = !currentObj.isLike
             modelChanged(currentObj)
         }
+
+
+    }
+
+    PhotoView{
+        id:photo_view
+        x:0;y:0
+        opacity: 0
+        width: flickable.parent.width
+        height: flickable.parent.height
+        onClose: {
+            photo_view.hide()
+            flickable.forceActiveFocus()
+        }
+
 
 
     }

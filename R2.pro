@@ -14,6 +14,7 @@ DEFINES += NETWORKACCESS
 
 symbian:{
     TARGET.UID3 = 0xEA2FC102
+    TARGET.EPOCHEAPSIZE = 0x200000 0x2000000
     ICON = MyReader.svg
 }
 
@@ -161,4 +162,5 @@ OTHER_FILES += \
     qml/R2/res/loading.gif \
     qml/R2/FeedView.qml \
     qml/R2/PhotoView.qml \
-    qml/R2/res/photo.png
+    qml/R2/res/photo.png \
+    qml/R2/FeedDetailS.qml

@@ -10,7 +10,11 @@ Rectangle {
     Behavior on opacity{NumberAnimation{duration: 200}}
     signal photoChicked()
 
-    Keys.onSelectPressed:photoChicked()
+    Keys.onSelectPressed:{
+        if(photo_.opacity==1){
+            photoChicked()
+        }
+    }
 
     Image {
         id: photo_

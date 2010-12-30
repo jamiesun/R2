@@ -65,6 +65,7 @@ Item {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.topMargin: 0
+        keyNavigationWraps:true
         clip: true
         model: tagsModel
         delegate: TagItem{

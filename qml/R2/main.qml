@@ -149,6 +149,7 @@ Rectangle {
             main.state = "showFeedList"
             feedlist.update(title,url)
         }
+        onHome:main.state = "showMain"
     }
 
     FeedList{
