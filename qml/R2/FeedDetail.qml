@@ -106,11 +106,7 @@ Flickable {
         clip: true
         preferredWidth: flickable.width
         preferredHeight: flickable.height+5
-//        settings.javascriptEnabled: true
-//        settings.pluginsEnabled: true
-//        renderingEnabled: true
-//        settings.privateBrowsingEnabled:true
-//        settings.localContentCanAccessRemoteUrls:true
+        settings.offlineWebApplicationCacheEnabled:true
 
         Behavior on opacity{NumberAnimation{duration:200}}
 
