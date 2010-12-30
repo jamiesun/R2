@@ -10,12 +10,14 @@ Flickable {
     pressDelay: 200
     smooth: true
 
-    Behavior on contentY{NumberAnimation{duration: 400;easing.type: Easing.InOutQuart}}
+    Behavior on contentY{NumberAnimation{duration: 800;easing.type: Easing.InOutQuart}}
 
     signal next()
     signal previous()
     signal back()
     signal home()
+    signal sendmail()
+    signal doComment()
     signal modelChanged(variant obj)
 
     WorkerScript {
@@ -63,8 +65,7 @@ Flickable {
             currentObj.isRead = true
             modelChanged(currentObj)
         }
-        web_view.evaluateJavaScript("location.replace(\"about:blank\");")
-        web_view.html = "<style> body{font-size：12px;} img{max-width:"
+        web_view.html = "<style> body{background:white;font-size：12px;} img{max-width:"
                   + (flickable.parent.width-20)
                   + "px;} </style>"
                   + "<h3>"+currentObj.title+"</h3>"
@@ -72,8 +73,6 @@ Flickable {
         web_view.forceActiveFocus()
         contentX = 0
         contentY = 0
-
-
     }
 
 
@@ -86,14 +85,16 @@ Flickable {
     property int histx : 0
     property int histy : 0
 
-    function resetTbar(){
+    function resetPos(){
         feedMenu.x += contentX-histx
         feedMenu.y += contentY-histy
+        loading.x += contentX-histx
+        loading.y += contentY-histy
         histx = contentX
         histy = contentY
     }
-    onContentXChanged: resetTbar()
-    onContentYChanged: resetTbar()
+    onContentXChanged: resetPos()
+    onContentYChanged: resetPos()
 
 
     onFocusChanged: {
@@ -109,10 +110,7 @@ Flickable {
         opacity:  hide?0.0:1.0
         clip: true
         preferredWidth: flickable.width
-        preferredHeight: flickable.height+50
-        settings.offlineWebApplicationCacheEnabled:true
-        settings.javascriptEnabled:true
-        settings.pluginsEnabled:true
+        preferredHeight: flickable.height
         Behavior on opacity{NumberAnimation{duration:200}}
 
         Keys.onUpPressed:{
@@ -133,6 +131,7 @@ Flickable {
 
 
     }
+
 
 
     Loading{
@@ -177,6 +176,16 @@ Flickable {
             actionWork.sendMessage(msg)
             currentObj.isLike = !currentObj.isLike
             modelChanged(currentObj)
+        }
+
+        onEmail:{
+            feedMenu.hide()
+            sendmail()
+        }
+
+        onComment:{
+            feedMenu.hide()
+            doComment()
         }
 
 

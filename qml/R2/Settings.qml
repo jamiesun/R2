@@ -25,7 +25,7 @@ Item {
        else if(event.key==17825792)doSave()
    }
 
-    KeyNavigation.down:ebox
+
 
     onFocusChanged: {
         if(activeFocus){
@@ -76,7 +76,7 @@ Item {
                 anchors.topMargin: 5
                 anchors.fill: parent
                 font.pointSize:7
-                KeyNavigation.down:passwd_;KeyNavigation.up:nums
+                KeyNavigation.down:passwd_;KeyNavigation.up:fnum
             }
         }
 
@@ -107,7 +107,7 @@ Item {
             border.width: passwd_.activeFocus?1:0
 
             TextInput {
-                id: passwd_;focus: pbox.activeFocus
+                id: passwd_
                 text: ""
                 echoMode: TextInput.PasswordEchoOnEdit
                 cursorVisible: activeFocus
@@ -157,7 +157,6 @@ Item {
                 anchors.topMargin:8
                 anchors.rightMargin: 5
                 anchors.bottomMargin: 5
-                focus: nums.activeFocus
                 anchors.leftMargin: 5
             }
             anchors.rightMargin: 20

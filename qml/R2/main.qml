@@ -77,6 +77,19 @@ Rectangle {
     }
 
     WorkerScript {
+        id: mailWork
+        source: "sendmail.js"
+        onMessage: {
+            if(messageObject.code==0){
+                console.log("sendmail success")
+            }
+            else{
+                console.log("sendmail faild");
+            }
+        }
+    }
+
+    WorkerScript {
         id: authWork
         source: "auth.js"
         onMessage: {
@@ -191,6 +204,8 @@ Rectangle {
             }
         }
         onHome:main.state = "showMain"
+        onSendmail:main.state = "showSendmail"
+        onDoComment:main.state = "showComment"
     }
 
     Settings{
@@ -205,7 +220,36 @@ Rectangle {
         }
     }
 
+    SendMail{
+        id:sendMail
+        opacity:0
+        anchors.fill:parent
+        onCancel:main.state = "showItem"
+        onSend:{
+            main.state = "showItem"
+            var message = feedlist.getCurrentObj()
+            var msg = {}
+            msg.emailTo = mailto
+            msg.comment = content
+            msg.auth = message.auth
+            msg.sid = message.sid
+            msg.token = message.token
+            msg.subject = message.title
+            msg.entry = message.id
+            msg.id = message.id
+            mailWork.sendMessage(msg)
+        }
+    }
 
+    Comment{
+        id:comment
+        opacity:0
+        anchors.fill:parent
+        onCancel:main.state = "showItem"
+        onComment:{
+            main.state = "showItem"
+        }
+    }
 
     Loading{
         id:loading
@@ -251,6 +295,22 @@ Rectangle {
         State {
             name: "showSettings"
             PropertyChanges {target: settings;opacity: 1;focus:true}
+            PropertyChanges {target: taglist;opacity: 0}
+            PropertyChanges {target: feedlist;opacity: 0}
+            PropertyChanges {target: rsslist;opacity: 0}
+        },
+        State {
+            name: "showSendmail"
+            PropertyChanges {target: sendMail;opacity: 1;focus:true}
+            PropertyChanges {target: feedDetail;opacity: 0}
+            PropertyChanges {target: taglist;opacity: 0}
+            PropertyChanges {target: feedlist;opacity: 0}
+            PropertyChanges {target: rsslist;opacity: 0}
+        },
+        State {
+            name: "showComment"
+            PropertyChanges {target: comment;opacity: 1;focus:true}
+            PropertyChanges {target: feedDetail;opacity: 0}
             PropertyChanges {target: taglist;opacity: 0}
             PropertyChanges {target: feedlist;opacity: 0}
             PropertyChanges {target: rsslist;opacity: 0}

@@ -137,10 +137,7 @@ Item {
         anchors.topMargin: 5
         anchors.rightMargin: 10
         anchors.leftMargin: 10
-        Keys.onSelectPressed:{
-            menu.email()
-            menu.close()
-        }
+        Keys.onSelectPressed:menu.email()
         KeyNavigation.down:comment;KeyNavigation.up:star
     }
 
@@ -155,10 +152,7 @@ Item {
         anchors.topMargin: 5
         anchors.rightMargin: 10
         anchors.leftMargin: 10
-        Keys.onSelectPressed:{
-            menu.comment()
-            menu.close()
-        }
+        Keys.onSelectPressed:menu.comment()
         KeyNavigation.down:closed;KeyNavigation.up:email
     }
 }

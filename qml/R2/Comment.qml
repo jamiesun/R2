@@ -1,20 +1,38 @@
 import Qt 4.7
 
-Rectangle {
+FocusScope {
     id: bg
-    width: 320
-    height: 240
+    width: parent.width
+    height: parent.height
+    Behavior on opacity{NumberAnimation{duration: 200}}
+    signal comment(string tags,string content)
+    signal cancel()
 
-
-    gradient: Gradient {
-        GradientStop {
-            position: 0
-            color: "#4d4d4d"
+    Keys.onPressed:{
+        if(event.key==17825793)cancel()
+        else if(event.key==17825792)comment(tag_.text,comment_.text)
+    }
+    onFocusChanged:{
+        if(activeFocus){
+            tag_.forceActiveFocus()
         }
+    }
+    KeyNavigation.down:tag_
 
-        GradientStop {
-            position: 1
-            color: "#000000"
+
+    Rectangle{
+        opacity:0.7
+        anchors.fill:parent
+        gradient: Gradient {
+            GradientStop {
+                position: 0
+                color: "#4d4d4d"
+            }
+
+            GradientStop {
+                position: 1
+                color: "#000000"
+            }
         }
     }
 
@@ -26,12 +44,12 @@ Rectangle {
         anchors.rightMargin: 0
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
-        type:"sendmail"
+        type:"comment"
     }
 
     Rectangle {
         id: tbar
-        width: 320
+        width: parent.width
         height: 30
         gradient: Gradient {
             GradientStop {
@@ -61,7 +79,7 @@ Rectangle {
         Text {
             id: title_
             color: "#ffffff"
-            text: "Send Mail"
+            text: "Add comment"
             font.bold: true
             font.pointSize: 8
             style: "Raised"
@@ -73,17 +91,7 @@ Rectangle {
         id: box1
         height: 32
         radius: 5
-        gradient: Gradient {
-            GradientStop {
-                position: 0
-                color: "#eeeeee"
-            }
-
-            GradientStop {
-                position: 0.93
-                color: "#c4c4c4"
-            }
-        }
+        color: tag_.activeFocus?"#ffffff":"#e8e8e8"
         anchors.right: parent.right
         anchors.rightMargin: 10
         anchors.left: parent.left
@@ -92,35 +100,36 @@ Rectangle {
         anchors.topMargin: 10
 
         TextInput {
-            id: mailto
+            id: tag_
             text: ""
-            cursorVisible: true
+            cursorVisible: activeFocus
             anchors.right: parent.right
             anchors.rightMargin: 10
             anchors.left: text2.right
             anchors.leftMargin: 10
             anchors.verticalCenter: parent.verticalCenter
-            echoMode: "Normal"
+            KeyNavigation.down:comment_
+            KeyNavigation.up:comment_
         }
 
         Text {
             id: text2
             color: "#000000"
-            text: "To:"
+            text: "Tag:"
             anchors.left: parent.left
             anchors.leftMargin: 10
             anchors.verticalCenter: parent.verticalCenter
-            font.pointSize: 9
+            font.pointSize: 8
         }
     }
 
     Rectangle {
         id: box2
-        color: "#e8e8e8"
+        color: comment_.activeFocus?"#ffffff":"#e8e8e8"
         radius: 5
-        anchors.top: rectangle2.bottom
+        anchors.top: box1.bottom
         anchors.right: parent.right
-        anchors.bottom: menubar1.top
+        anchors.bottom: menubar.top
         anchors.left: parent.left
         anchors.topMargin: 10
         anchors.bottomMargin: 10
@@ -128,14 +137,16 @@ Rectangle {
         anchors.rightMargin: 10
 
         TextEdit {
-            id: mailnote
+            id: comment_
             text: ""
-            cursorVisible: true
+            cursorVisible: activeFocus
             anchors.rightMargin: 5
             anchors.leftMargin: 5
             anchors.bottomMargin: 5
             anchors.topMargin: 5
             anchors.fill: parent
+            KeyNavigation.up:tag_
+            KeyNavigation.down:tag_
         }
     }
 }

@@ -1,20 +1,38 @@
 import Qt 4.7
 
-Rectangle {
+FocusScope {
     id: bg
-    width: 320
-    height: 240
+    width: parent.width
+    height: parent.height
+    Behavior on opacity{NumberAnimation{duration: 200}}
+    signal send(string mailto,string content)
+    signal cancel()
 
-
-    gradient: Gradient {
-        GradientStop {
-            position: 0
-            color: "#4d4d4d"
+    Keys.onPressed:{
+        if(event.key==17825793)cancel()
+        else if(event.key==17825792)send(mailto_.text,mailnote_.text)
+    }
+    onFocusChanged:{
+        if(activeFocus){
+            mailto_.forceActiveFocus()
         }
+    }
+    KeyNavigation.down:mailto_
 
-        GradientStop {
-            position: 1
-            color: "#000000"
+
+    Rectangle{
+        opacity:0.7
+        anchors.fill:parent
+        gradient: Gradient {
+            GradientStop {
+                position: 0
+                color: "#4d4d4d"
+            }
+
+            GradientStop {
+                position: 1
+                color: "#000000"
+            }
         }
     }
 
@@ -31,7 +49,7 @@ Rectangle {
 
     Rectangle {
         id: tbar
-        width: 320
+        width: parent.width
         height: 30
         gradient: Gradient {
             GradientStop {
@@ -73,17 +91,7 @@ Rectangle {
         id: box1
         height: 32
         radius: 5
-        gradient: Gradient {
-            GradientStop {
-                position: 0
-                color: "#eeeeee"
-            }
-
-            GradientStop {
-                position: 0.93
-                color: "#c4c4c4"
-            }
-        }
+        color: mailto_.activeFocus?"#ffffff":"#e8e8e8"
         anchors.right: parent.right
         anchors.rightMargin: 10
         anchors.left: parent.left
@@ -92,15 +100,16 @@ Rectangle {
         anchors.topMargin: 10
 
         TextInput {
-            id: mailto
+            id: mailto_
             text: ""
-            cursorVisible: true
+            cursorVisible: activeFocus
             anchors.right: parent.right
             anchors.rightMargin: 10
             anchors.left: text2.right
             anchors.leftMargin: 10
             anchors.verticalCenter: parent.verticalCenter
-            echoMode: "Normal"
+            KeyNavigation.down:mailnote_
+            KeyNavigation.up:mailnote_
         }
 
         Text {
@@ -110,17 +119,17 @@ Rectangle {
             anchors.left: parent.left
             anchors.leftMargin: 10
             anchors.verticalCenter: parent.verticalCenter
-            font.pointSize: 9
+            font.pointSize: 8
         }
     }
 
     Rectangle {
         id: box2
-        color: "#e8e8e8"
+        color: mailnote_.activeFocus?"#ffffff":"#e8e8e8"
         radius: 5
-        anchors.top: rectangle2.bottom
+        anchors.top: box1.bottom
         anchors.right: parent.right
-        anchors.bottom: menubar1.top
+        anchors.bottom: menubar.top
         anchors.left: parent.left
         anchors.topMargin: 10
         anchors.bottomMargin: 10
@@ -128,14 +137,16 @@ Rectangle {
         anchors.rightMargin: 10
 
         TextEdit {
-            id: mailnote
+            id: mailnote_
             text: ""
-            cursorVisible: true
+            cursorVisible: activeFocus
             anchors.rightMargin: 5
             anchors.leftMargin: 5
             anchors.bottomMargin: 5
             anchors.topMargin: 5
             anchors.fill: parent
+            KeyNavigation.up:mailto_
+            KeyNavigation.down:mailto_
         }
     }
 }

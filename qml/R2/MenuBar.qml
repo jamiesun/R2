@@ -14,10 +14,11 @@ Item{
         }else if(type=="rss"||type=="feed"){
             lkey.source = "res/16/home.png"
             rkey.source = "res/16/undo.png"
-        }else  if(type=="settings"){
+        }else  if(type=="settings"||type=="sendmail"){
             lkey.source = "res/16/checkmark.png"
             rkey.source = "res/16/cancel.png"
         }
+
     }
 
     Rectangle {

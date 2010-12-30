@@ -169,4 +169,7 @@ OTHER_FILES += \
     qml/R2/res/16/round_arrow_right.png \
     qml/R2/res/16/round_arrow_left.png \
     qml/R2/res/16/eye.png \
-    qml/R2/res/16/eye_inv.png
+    qml/R2/res/16/eye_inv.png \
+    qml/R2/SendMail.qml \
+    qml/R2/sendmail.js \
+    qml/R2/Comment.qml
