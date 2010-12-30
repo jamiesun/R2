@@ -163,4 +163,10 @@ OTHER_FILES += \
     qml/R2/FeedView.qml \
     qml/R2/PhotoView.qml \
     qml/R2/res/photo.png \
-    qml/R2/FeedDetailS.qml
+    qml/R2/FeedDetailS.qml \
+    qml/R2/res/16/sound_low.png \
+    qml/R2/res/16/sound_high.png \
+    qml/R2/res/16/round_arrow_right.png \
+    qml/R2/res/16/round_arrow_left.png \
+    qml/R2/res/16/eye.png \
+    qml/R2/res/16/eye_inv.png

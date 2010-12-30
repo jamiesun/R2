@@ -53,7 +53,7 @@ Item {
         anchors.leftMargin: 10
         anchors.verticalCenterOffset: 0
         anchors.verticalCenter: parent.verticalCenter
-        source: isRead?"res/16/document.png":"res/16/doc_new.png"
+        source: isRead?"res/16/sound_low.png":"res/16/sound_high.png"
         opacity: feeditem.activeFocus?1:0.6
     }
 

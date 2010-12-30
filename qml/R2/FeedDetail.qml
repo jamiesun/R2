@@ -63,12 +63,16 @@ Flickable {
             currentObj.isRead = true
             modelChanged(currentObj)
         }
+        web_view.evaluateJavaScript("location.replace(\"about:blank\");")
         web_view.html = "<style> body{font-size：12px;} img{max-width:"
                   + (flickable.parent.width-20)
                   + "px;} </style>"
                   + "<h3>"+currentObj.title+"</h3>"
                   + currentObj.content
         web_view.forceActiveFocus()
+        contentX = 0
+        contentY = 0
+
 
     }
 
@@ -105,12 +109,11 @@ Flickable {
         opacity:  hide?0.0:1.0
         clip: true
         preferredWidth: flickable.width
-        preferredHeight: flickable.height+5
+        preferredHeight: flickable.height+50
         settings.offlineWebApplicationCacheEnabled:true
-
+        settings.javascriptEnabled:true
+        settings.pluginsEnabled:true
         Behavior on opacity{NumberAnimation{duration:200}}
-
-
 
         Keys.onUpPressed:{
             if(!flickable.atYBeginning)
