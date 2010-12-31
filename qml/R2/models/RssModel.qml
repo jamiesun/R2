@@ -49,7 +49,7 @@ ListModel{
                 }
             }
         }
-        rssModel.insert(0,{feedtitle:"All items",feedid:contentSource+"user/-/label/"+tag,count:counttotle})
+        rssModel.insert(0,{feedtitle:"All items",feedid:contentSource+tag,count:counttotle})
     }
 
     function update(){

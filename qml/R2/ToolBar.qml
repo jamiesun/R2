@@ -6,7 +6,7 @@ Item {
     height: 30
 
     signal settings()
-    signal notes()
+    signal note()
     signal reload()
 
     onFocusChanged: {
@@ -58,7 +58,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         source: activeFocus?"res/16/notepad.png":"res/16/notepad_2.png"
         KeyNavigation.right:setting;KeyNavigation.left:reload
-        Keys.onSelectPressed:toolbar.notes()
+        Keys.onSelectPressed:toolbar.note()
     }
 
     Image {

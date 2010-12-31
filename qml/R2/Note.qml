@@ -5,18 +5,19 @@ FocusScope {
     width: parent.width
     height: parent.height
     Behavior on opacity{NumberAnimation{duration: 200}}
-    signal comment(string content)
+    signal createNote(string tags,string content)
     signal cancel()
 
     Keys.onPressed:{
         if(event.key==17825793)cancel()
-        else if(event.key==17825792)comment(comment_.text)
+        else if(event.key==17825792)createNote(tag_.text,note_.text)
     }
     onFocusChanged:{
         if(activeFocus){
             tag_.forceActiveFocus()
         }
     }
+    KeyNavigation.down:tag_
 
 
     Rectangle{
@@ -78,7 +79,7 @@ FocusScope {
         Text {
             id: title_
             color: "#ffffff"
-            text: "Add comment"
+            text: "Add Note"
             font.bold: true
             font.pointSize: 8
             style: "Raised"
@@ -87,10 +88,46 @@ FocusScope {
     }
 
     Rectangle {
-        id: box2
-        color: comment_.activeFocus?"#ffffff":"#e8e8e8"
+        id: box1
+        height: 32
         radius: 5
+        color: tag_.activeFocus?"#ffffff":"#e8e8e8"
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+        anchors.left: parent.left
+        anchors.leftMargin: 10
         anchors.top: tbar.bottom
+        anchors.topMargin: 10
+
+        TextInput {
+            id: tag_
+            text: ""
+            cursorVisible: activeFocus
+            anchors.right: parent.right
+            anchors.rightMargin: 10
+            anchors.left: text2.right
+            anchors.leftMargin: 10
+            anchors.verticalCenter: parent.verticalCenter
+            KeyNavigation.down:note_
+            KeyNavigation.up:note_
+        }
+
+        Text {
+            id: text2
+            color: "#000000"
+            text: "Tag:"
+            anchors.left: parent.left
+            anchors.leftMargin: 10
+            anchors.verticalCenter: parent.verticalCenter
+            font.pointSize: 8
+        }
+    }
+
+    Rectangle {
+        id: box2
+        color: note_.activeFocus?"#ffffff":"#e8e8e8"
+        radius: 5
+        anchors.top: box1.bottom
         anchors.right: parent.right
         anchors.bottom: menubar.top
         anchors.left: parent.left
@@ -100,7 +137,7 @@ FocusScope {
         anchors.rightMargin: 10
 
         TextEdit {
-            id: comment_
+            id: note_
             text: ""
             cursorVisible: activeFocus
             anchors.rightMargin: 5
@@ -108,6 +145,8 @@ FocusScope {
             anchors.bottomMargin: 5
             anchors.topMargin: 5
             anchors.fill: parent
+            KeyNavigation.up:tag_
+            KeyNavigation.down:tag_
         }
     }
 }

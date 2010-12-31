@@ -14,34 +14,21 @@ Rectangle {
     property string feedMax: "30"
     property variant unreads: {}
 
-    property string stateUrl: "https://www.google.com/reader/api/0/stream/contents/user/-/state/com.google/"
+    property string stateUrl: "https://www.google.com/reader/api/0/stream/contents/"
 
-    Image {
-        id: name
-        source: "res/bg.jpg"
-    }
+    Image {id: name;anchors.fill:parent;source: "res/bg.jpg"}
 
     gradient: Gradient {
-        GradientStop {
-            position: 0
-            color: "#363636"
-        }
-
-        GradientStop {
-            position: 1
-            color: "#000000"
-        }
+        GradientStop {position: 0;color: "#363636"}
+        GradientStop {position: 1;color: "#000000"}
     }
 
-    Keys.onPressed:{
-        console.log(event.key)
-    }
+    Keys.onPressed:{console.log(event.key)}
 
     Utils{id:utils}
 
     WorkerScript {
-        id: unreadWork
-        source: "unread.js"
+        id: unreadWork;source: "unread.js"
         onMessage: {
             if(messageObject.unreads){
                 console.log("unread success")
@@ -54,7 +41,6 @@ Rectangle {
                     }
                     main.unreads = urtmp
                 }
-
             }
             else{
                 console.log("unread faild");
@@ -63,8 +49,7 @@ Rectangle {
     }
 
     WorkerScript {
-        id: tokenWork
-        source: "token.js"
+        id: tokenWork; source: "token.js"
         onMessage: {
             if(messageObject.token){
                 console.log("token success")
@@ -76,22 +61,10 @@ Rectangle {
         }
     }
 
-    WorkerScript {
-        id: mailWork
-        source: "sendmail.js"
-        onMessage: {
-            if(messageObject.code==0){
-                console.log("sendmail success")
-            }
-            else{
-                console.log("sendmail faild");
-            }
-        }
-    }
+
 
     WorkerScript {
-        id: authWork
-        source: "auth.js"
+        id: authWork;source: "auth.js"
         onMessage: {
             if(messageObject.auth&&messageObject.sid){
                 console.log("login success")
@@ -105,7 +78,6 @@ Rectangle {
                 console.log("login faild");
             }
             loading.show = false
-
         }
     }
 
@@ -138,25 +110,24 @@ Rectangle {
 
     TagList {
         id: taglist;auth:main.auth;sid:main.sid;
-        anchors.fill: parent
-        focus: true
+        anchors.fill: parent;focus: true
         onItemClick: {
             if(tag=="starred"||tag=="broadcast"||tag=="created"){
                 main.state = "showFeedList2"
-                feedlist.update(tag,stateUrl+tag)
+                feedlist.update(tag,stateUrl+tid)
             }else{
                 main.state = "showRsslist"
-                rsslist.filter(tag,main.unreads)
+                rsslist.filter(tid,main.unreads)
                 rsslist.forceActiveFocus()
             }
         }
         onDoSettings: main.state = "showSettings"
+        onDoNote:main.state = "showNote"
     }
 
     RssList {
         id: rsslist;auth:main.auth;sid:main.sid;
-        anchors.fill: parent
-        opacity: 0
+        anchors.fill: parent;opacity: 0
         onBack:main.state = "showMain"
         onItemClick: {
             main.state = "showFeedList"
@@ -167,8 +138,7 @@ Rectangle {
 
     FeedList{
         id: feedlist;auth:main.auth;sid:main.sid;token:main.token
-        anchors.fill: parent
-        opacity: 0
+        anchors.fill: parent;opacity: 0
         onBack:main.state = "showRsslist"
         onItemClick: {
             main.state = "showItem"
@@ -178,10 +148,8 @@ Rectangle {
     }
 
     FeedDetail{
-        id:feedDetail
-        opacity: 0
+        id:feedDetail;opacity: 0;anchors.fill: parent
         hide:main.state!="showItem"
-        anchors.fill: parent
         onPrevious: {
             feedlist.previous()
             feedDetail.update(feedlist.getCurrentObj())
@@ -206,6 +174,7 @@ Rectangle {
         onHome:main.state = "showMain"
         onSendmail:main.state = "showSendmail"
         onDoComment:main.state = "showComment"
+        onSetMouse:utils.showMouse(isShow)
     }
 
     Settings{
@@ -221,9 +190,11 @@ Rectangle {
     }
 
     SendMail{
-        id:sendMail
-        opacity:0
-        anchors.fill:parent
+        id:sendMail;opacity:0;anchors.fill:parent
+        WorkerScript {
+            id: mailWork;source: "sendmail.js"
+            onMessage: console.log((messageObject.code==0)?"sendMail success":"sendMail faild")
+        }
         onCancel:main.state = "showItem"
         onSend:{
             main.state = "showItem"
@@ -242,12 +213,32 @@ Rectangle {
     }
 
     Comment{
-        id:comment
-        opacity:0
-        anchors.fill:parent
+        id:comment;opacity:0;anchors.fill:parent
+        WorkerScript {
+            id: commentWork;source: "comment.js"
+            onMessage: console.log((messageObject.code==0)?"comment success":"comment faild")
+        }
         onCancel:main.state = "showItem"
         onComment:{
             main.state = "showItem"
+            var message = feedlist.getCurrentObj()
+            var msg = {auth:main.auth,sid:main.sid,token:main.token,comment:content,id:message.id,streamId:message.streamId}
+            commentWork.sendMessage(msg)
+        }
+    }
+
+    Note{
+        id:note;opacity:0;anchors.fill:parent
+        WorkerScript {
+            id: noteWork;source: "createnote.js"
+            onMessage: console.log((messageObject.code==0)?"createnote success":"createnote faild")
+        }
+        onCancel:main.state = "showMain"
+        onCreateNote:{
+            main.state = "showMain"
+            var msg = {snippet:content,auth:main.auth,sid:main.sid,token:main.token}
+            if(tags) msg.tags = tags
+            noteWork.sendMessage(msg)
         }
     }
 
@@ -314,6 +305,11 @@ Rectangle {
             PropertyChanges {target: taglist;opacity: 0}
             PropertyChanges {target: feedlist;opacity: 0}
             PropertyChanges {target: rsslist;opacity: 0}
+        },
+        State {
+            name: "showNote"
+            PropertyChanges {target: note;opacity: 1;focus:true}
+            PropertyChanges {target: taglist;opacity: 0}
         }
 
 

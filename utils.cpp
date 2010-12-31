@@ -3,6 +3,7 @@
 #include <QTextStream>
 #include <QDateTime>
 #include <QDebug>
+#include <QtGui/QApplication>
 Utils::Utils(QObject *parent) :
     QObject(parent)
 {
@@ -65,6 +66,18 @@ void Utils::safeWrite(const QString &fname, const QString &ctx)
     QTextStream out(&file);
     out << dest.toUtf8();
     file.close();
+}
+
+void Utils::showMouse(bool isShow)
+{
+    if(isShow)
+    {
+        QApplication::setNavigationMode(Qt::NavigationModeCursorForceVisible);
+    }
+    else
+    {
+        QApplication::setNavigationMode(Qt::NavigationModeKeypadDirectional);
+    }
 }
 
 QString Utils::getCache(const QString &fname)

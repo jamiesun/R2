@@ -3,6 +3,9 @@ import QtWebKit 1.0
 Flickable {
     property bool hide: true
     property variant currentObj: {}
+    property bool showMouse: false
+
+
     id: flickable
     width: parent.width
     contentWidth: Math.max(parent.width,web_view.width)
@@ -10,7 +13,8 @@ Flickable {
     pressDelay: 200
     smooth: true
 
-    Behavior on contentY{NumberAnimation{duration: 800;easing.type: Easing.InOutQuart}}
+    Behavior on contentX{NumberAnimation{duration: 600;easing.type: Easing.InOutQuart}}
+    Behavior on contentY{NumberAnimation{duration: 600;easing.type: Easing.InOutQuart}}
 
     signal next()
     signal previous()
@@ -18,6 +22,7 @@ Flickable {
     signal home()
     signal sendmail()
     signal doComment()
+    signal setMouse(bool isShow)
     signal modelChanged(variant obj)
 
     WorkerScript {
@@ -40,13 +45,18 @@ Flickable {
     Keys.onPressed:{
         if(event.key == '17825793'){
             feedMenu.hide()
+            showMouse = false
+            setMouse(showMouse)
             back()
         }
         if(event.key == '17825792'){
             feedMenu.hide()
-            home()
+            showMouse = !showMouse
+            setMouse(showMouse)
         }
     }
+
+
 
     function copyObj(obj,dest){
         for(var k in obj){
@@ -108,10 +118,20 @@ Flickable {
         id: web_view
         x: 0;y: 0
         opacity:  hide?0.0:1.0
-        clip: true
+        clip: true;smooth:true
         preferredWidth: flickable.width
         preferredHeight: flickable.height
+        settings.javascriptEnabled:true
+        settings.linksIncludedInFocusChain:true
+        settings.localContentCanAccessRemoteUrls:true
+        settings.pluginsEnabled:true
+        settings.offlineWebApplicationCacheEnabled:true
         Behavior on opacity{NumberAnimation{duration:200}}
+
+
+        onLoadFinished:{
+            evaluateJavaScript("document.body.background='white'';")
+        }
 
         Keys.onUpPressed:{
             if(!flickable.atYBeginning)
@@ -123,12 +143,20 @@ Flickable {
         }
 
         Keys.onLeftPressed:{
-            flickable.previous()
+            if(flickable.atXBeginning){
+                flickable.previous()
+                if(showMouse)web_view.back.trigger()
+            }
+            else
+                flickable.contentX -= Math.min(flickable.parent.width/2,Math.abs(flickable.contentX));
+
         }
         Keys.onRightPressed:{
-            flickable.next()
+            if(flickable.atXEnd)
+                flickable.next()
+            else
+                flickable.contentX += Math.min(flickable.parent.width/2,Math.abs(flickable.parent.width-(flickable.contentWidth-contentX)));
         }
-
 
     }
 
@@ -190,6 +218,4 @@ Flickable {
 
 
     }
-
-
 }

@@ -5,7 +5,9 @@ FocusScope {
     width: parent.width
     height: activeFocus?40:32
     Behavior on height{NumberAnimation{duration: 200}}
-    property string title: title.text
+    property alias title: title.text
+    property string tid: tagid
+
 
     function setCount(countvar){
         count.text = countvar

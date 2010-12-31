@@ -172,4 +172,7 @@ OTHER_FILES += \
     qml/R2/res/16/eye_inv.png \
     qml/R2/SendMail.qml \
     qml/R2/sendmail.js \
-    qml/R2/Comment.qml
+    qml/R2/Comment.qml \
+    qml/R2/createnote.js \
+    qml/R2/comment.js \
+    qml/R2/Note.qml

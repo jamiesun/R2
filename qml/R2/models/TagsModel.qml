@@ -25,10 +25,11 @@ ListModel{
                     var result = JSON.parse(http.responseText)['tags']
                     tagsModel.clear()
                     for(var i=0;i<result.length;i++){
-                        var tagname = result[i].id
-                        tagname = tagname.substr(tagname.lastIndexOf('/')+1)
-                        tagsModel.append({tagname:tagname})
+                        var tagid = result[i].id
+                        var tagname = tagid.substr(tagid.lastIndexOf('/')+1)
+                        tagsModel.append({tagname:tagname,tagid:tagid})
                     }
+                    tagsModel.insert(1,{tagname:"Notes",tagid:"user/-/state/com.google/created"})
 
                 }else if(http.status==401){
                     error("401 error")
@@ -45,7 +46,6 @@ ListModel{
         http.setRequestHeader("Authorization","GoogleLogin auth="+auth);
         http.setRequestHeader("Cookie","SID="+sid);
         http.setRequestHeader("accept-encoding", "gzip, deflate")
-        //console.log("auth string:"+authStr+"\n\n sid="+sid)
         try {
           console.log("http GET "+source)
           http.send();

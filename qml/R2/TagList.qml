@@ -7,8 +7,9 @@ Item {
     Behavior on opacity{NumberAnimation{duration: 200}}
     width: 320
     height: 240
-    signal itemClick(string tag)
+    signal itemClick(string tag,string tid)
     signal doSettings()
+    signal doNote()
 
     function updateModel(mauth,msid){
         auth = mauth
@@ -28,17 +29,6 @@ Item {
         }
     }
 
-//    gradient: Gradient {
-//        GradientStop {
-//            position: 0
-//            color: "#363636"
-//        }
-
-//        GradientStop {
-//            position: 1
-//            color: "#000000"
-//        }
-//    }
     TagsModel{
         id:tagsModel;auth: taglist.auth;sid: taglist.sid
         onError: console.log(error)
@@ -55,6 +45,7 @@ Item {
         KeyNavigation.up:list_view;KeyNavigation.down:list_view
         onSettings: doSettings()
         onReload:tagsModel.update()
+        onNote:doNote()
     }
 
     ListView {
@@ -70,8 +61,8 @@ Item {
         model: tagsModel
         delegate: TagItem{
             id:tagItem
-            Keys.onRightPressed:itemClick(tagItem.title)
-            Keys.onSelectPressed:itemClick(tagItem.title)
+            Keys.onRightPressed:itemClick(tagItem.title,tagItem.tid)
+            Keys.onSelectPressed:itemClick(tagItem.title,tagItem.tid)
         }
 
         KeyNavigation.left:toolbar
