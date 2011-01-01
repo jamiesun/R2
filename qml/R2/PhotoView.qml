@@ -52,11 +52,6 @@ Rectangle {
             x:(parent.width-image1.width)/2
             y:(parent.height-image1.height)/2
             onStatusChanged: {
-                console.log("image.status:"+image1.status)
-                console.log("null="+Image.Null)
-                console.log("loading="+Image.Loading)
-                console.log("ready="+Image.Ready)
-                console.log("error="+Image.Error)
                 if(image1.status==Image.Ready){
                     var w = image1.width
                     var h = image1.height
@@ -64,7 +59,6 @@ Rectangle {
                     var nh = h*(nw/w)
                     image1.width = nw
                     image1.height = nh
-                    console.log("w="+w+" h="+h+" nw="+nw+" nh+"+nh)
                 }
             }
 

@@ -17,8 +17,6 @@ ListModel{
         var http = new XMLHttpRequest();
         http.onreadystatechange = function() {
             if (http.readyState == XMLHttpRequest.DONE) {
-                console.log("getFeeds:"+http.status+"  "+http.statusText);
-                //console.log("resp:"+http.getAllResponseHeaders());
                 if(http.status==200){
                     var result = JSON.parse(http.responseText)['tags']
                     tagsModel.clear()
@@ -44,11 +42,7 @@ ListModel{
         http.setRequestHeader("Authorization","GoogleLogin auth="+auth);
         http.setRequestHeader("Cookie","SID="+sid);
         http.setRequestHeader("accept-encoding", "gzip, deflate")
-        try {
-          http.send();
-        } catch (e) {
-            error(e);
-        }
+        http.send()
     }
 
 

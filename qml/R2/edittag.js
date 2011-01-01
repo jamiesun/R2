@@ -33,13 +33,7 @@ WorkerScript.onMessage = function(message) {
     http.setRequestHeader("Cookie","SID="+sid);
     http.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     http.setRequestHeader("Content-Length", params.length);
-    try {
-      console.log(url+"&"+params)
-      http.send(params);
-    } catch (e) {
-        console.log(e)
-        error(e);
-    }
+    http.send(params)
 
 
 }

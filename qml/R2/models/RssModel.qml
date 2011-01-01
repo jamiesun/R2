@@ -81,10 +81,7 @@ ListModel{
         http.setRequestHeader("Authorization","GoogleLogin auth="+auth);
         http.setRequestHeader("Cookie","SID="+sid);
         http.setRequestHeader("accept-encoding", "gzip, deflate")
-        try { http.send()} catch (e) {
-            console.log(e)
-            error(e);
-        }
+        http.send()
     }
 
 
