@@ -1,0 +1,41 @@
+[R2]是一个Qt Quick开发的s60平台Google Reader客户端.当前版本支持s60 fp1以上机型，暂时还不支持s60 v5,在实际E71上运行良好，手机最好有32M以上可执行内存，若果页面中包含较大图片，会占用较多内存。
+
+
+[http://farm6.static.flickr.com/5049/5312107424_415152fa7e.jpg]
+
+更多截图在这里 http://www.flickr.com/photos/8328812/tags/mobile/
+
+或者这里 http://www.douban.com/photos/album/20747158/
+
+==* 功能==
+
+ # 根据标签浏览订阅列表
+ # 支持已读列表和未读列表的显示
+ # 文章显示支持图片和链接，支持导航键左右滚动快速浏览
+ # 文章分享
+ # 文章加注星标
+ # 文章收藏
+ # 文章邮件转发
+ # 文章加注笔记分享
+ # 笔记记录
+
+
+==使用说明==
+
+主要靠导航键，左右软键操作，
+
+==安装说明==
+
+确认你的机型是s60 fp1以上机型，比如n95,e71,e72等
+
+下载安装 Qt Runtime ftp://ftp.qt.nokia.com/qt/symbian/4.7.1/qt_installer.sis
+
+下载安装 [R2]_v1.0.sis安装文件 http://r2-release.googlecode.com/files/R2_v1.0.sis
+
+qt程序目前在扩展卡启动有点问题，最好安装到内存卡上。
+
+
+
+==隐私声明==
+
+当前版本采用google clientLogin登录google reader，[R2]在首次运行时需要输入帐号和密码，R2保证不会收集您的个人私密信息，若对此不能认可，请暂停使用[R2]，[R2]后续版本会支持oauth方式授权.
