@@ -6,7 +6,6 @@ WorkerScript.onMessage = function(message) {
     var http = new XMLHttpRequest();
     http.onreadystatechange = function() {
         if (http.readyState == XMLHttpRequest.DONE) {
-            console.log("token result: "+ http.status+"  "+http.statusText);
             if(http.status==200){
                WorkerScript.sendMessage({unreads:http.responseText})
             }else if(http.status==401){
@@ -21,14 +20,7 @@ WorkerScript.onMessage = function(message) {
     http.setRequestHeader("Authorization","GoogleLogin auth="+auth);
     http.setRequestHeader("Cookie","SID="+sid);
     http.setRequestHeader("accept-encoding", "gzip, deflate")
-
-    try {
-      console.log(url)
-      http.send();
-    } catch (e) {
-        console.log(e)
-        error(e);
-    }
+    http.send()
 
 
 }

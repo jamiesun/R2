@@ -2,8 +2,6 @@ import Qt 4.7
 import "models"
 Item {
     id:rsslist
-    property string auth: ''
-    property string sid: ''
     property string tag: ""
     Behavior on opacity{NumberAnimation{duration: 200}}
     width: 320
@@ -12,9 +10,9 @@ Item {
     signal home()
     signal itemClick(string title,string url)
 
-    function filter(tag,unreads){
-        rsslist.tag = tag
-        rssModel.filter(tag,unreads)
+    function filter(tagname,tagid,unreads){
+        rsslist.tag = tagname
+        rssModel.filter(tagid,unreads)
     }
 
     onFocusChanged: {
@@ -32,12 +30,7 @@ Item {
         }
     }
 
-
-
-    RssModel{
-        id:rssModel;auth: rsslist.auth;sid: rsslist.sid
-        onError: console.log(error)
-    }
+    RssModel{id:rssModel;onError: console.log(error)}
 
     RssToolBar {
         id: rsstoolbar

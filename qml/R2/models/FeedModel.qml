@@ -2,11 +2,12 @@ import Qt 4.7
 import "../cache.js" as Cache
 ListModel {
     id:feedModel
-    property string sid:""
-    property string auth:""
+    property string sid:mainApp.sid
+    property string auth:mainApp.auth
+    property string token: mainApp.token
     property string title:""
     property string feedUrl:""
-    property string feedMax: "30"
+    property string feedMax: mainApp.feedMax
 
     property bool busy: false
     signal error(string error)
@@ -23,11 +24,16 @@ ListModel {
             var icontent = items[i].content
             var itemid = items[i].id
             var istreamId = items[i].origin.streamId
+            var srcUrl = items[i].origin.htmlUrl
+            var srcTitle = items[i].origin.title
+            var url = items[i].alternate[0].href
             if(icontent){
                 content = icontent.content
-            }else{
+            }else if(summary){
                 content = summary.content
             }
+
+            if(!ititle)ititle=content.length>32?content.substr(0,32)+"...":content
 
             var isRead = false
             var isShare = false
@@ -51,10 +57,14 @@ ListModel {
             var mobj = {}
             mobj.auth = auth
             mobj.sid = sid
+            mobj.token = token
             mobj.title = ititle
             mobj.content = content
             mobj.id = itemid
             mobj.streamId = istreamId
+            mobj.srcUrl = srcUrl
+            mobj.srcTitle = srcTitle
+            mobj.url = url
             mobj.isRead = isRead
             mobj.isLike = isLike
             mobj.isStar = isStar
@@ -63,12 +73,12 @@ ListModel {
         }
     }
 
-    function reload(){
+    function reload(isRead){
         Cache.set(feedModel.feedUrl,{})
-        update(feedModel.feedUrl)
+        update(feedModel.feedUrl,isRead)
     }
 
-    function update(feedUrl){
+    function update(feedUrl,isRead){
         console.log("update feed"+feedUrl)
         feedModel.feedUrl = feedUrl
 
@@ -101,8 +111,9 @@ ListModel {
                 feedModel.busy = true
             }
         }
+        var url = isRead?feedUrl+"?n="+feedMax:feedUrl+"?n="+feedMax+"&xt=user/-/state/com.google/read"
 
-        http.open("GET", feedUrl+"?n="+feedMax);
+        http.open("GET", url);
         http.setRequestHeader("Authorization","GoogleLogin auth="+auth);
         http.setRequestHeader("Cookie","SID="+sid);
         http.setRequestHeader("accept-encoding", "gzip, deflate")

@@ -94,7 +94,7 @@ Item {
     MenuItem {
         id: like
         txt: isLike?"Unlike":"like"
-        icon: "res/16/star_fav_empty.png"
+        icon: "res/16/heart_empty.png"
         opacity: activeFocus?1:0.7
         anchors.top: share.bottom
         anchors.left: parent.left
@@ -111,7 +111,7 @@ Item {
 
     MenuItem {
         id: star
-        icon: "res/16/heart_empty.png"
+        icon: "res/16/star_fav_empty.png"
         txt: isStar?"Unstar":"star"
         opacity: activeFocus?1:0.7
         anchors.top: like.bottom
@@ -143,8 +143,8 @@ Item {
 
     MenuItem {
         id: comment
-        icon: "res/16/spechbubble_sq_line.png"
-        txt: "Comment"
+        icon: "res/16/notepad_2.png"
+        txt: "Note"
         opacity: activeFocus?1:0.7
         anchors.top: email.bottom
         anchors.left: parent.left

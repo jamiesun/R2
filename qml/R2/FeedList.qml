@@ -2,9 +2,6 @@ import Qt 4.7
 import "models"
 Item {
     id:feedlist
-    property alias auth: feedModel.auth
-    property alias sid: feedModel.sid
-    property string token: ""
     property string title: ""
     property alias feedMax: feedModel.feedMax
     Behavior on opacity{NumberAnimation{duration: 200}}
@@ -15,9 +12,7 @@ Item {
     signal itemClick()
 
     function getCurrentObj(){
-        var obj = feedModel.get(list_view.currentIndex)
-        obj.token = token
-        return obj;
+        return feedModel.get(list_view.currentIndex)
     }
 
     function setCurrentObj(obj){
@@ -58,8 +53,8 @@ Item {
         onError: console.log(error)
     }
 
-    RssToolBar {
-        id: rsstoolbar
+    FeedToolBar {
+        id: feedtoolbar
         title: feedlist.title
         anchors.right: parent.right
         anchors.rightMargin: 0
@@ -68,13 +63,14 @@ Item {
         anchors.top: parent.top
         anchors.topMargin: 0
         KeyNavigation.up:list_view;KeyNavigation.down:list_view
-        onReload:feedModel.reload()
+        onLoadRead: feedModel.reload(true)
+        onLoadUnread: feedModel.reload(false)
     }
 
     ListView {
         id: list_view
         anchors.bottomMargin: 24
-        anchors.top: rsstoolbar.bottom
+        anchors.top: feedtoolbar.bottom
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.left: parent.left
@@ -87,7 +83,7 @@ Item {
             Keys.onSelectPressed:itemClick()
         }
 
-        KeyNavigation.left:rsstoolbar
+        KeyNavigation.left:feedtoolbar
         Loading{
             id:loading
             anchors.fill: parent

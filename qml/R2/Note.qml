@@ -10,11 +10,16 @@ FocusScope {
 
     Keys.onPressed:{
         if(event.key==17825793)cancel()
-        else if(event.key==17825792)createNote(tag_.text,note_.text)
+        else if(event.key==17825792){
+            if(!note_.text)return
+            createNote(tag_.text,note_.text)
+        }
     }
     onFocusChanged:{
         if(activeFocus){
             tag_.forceActiveFocus()
+            tag_.text = ""
+            note_.text = ""
         }
     }
     KeyNavigation.down:tag_

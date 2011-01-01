@@ -57,7 +57,6 @@ OTHER_FILES += \
     qml/R2/main.qml \
     qml/R2/Loading.qml \
     qml/R2/json2.js \
-    qml/R2/IMenuBar.qml \
     qml/R2/FeedList.qml \
     qml/R2/FeedItem.qml \
     qml/R2/FeedDetail.qml \
@@ -175,4 +174,6 @@ OTHER_FILES += \
     qml/R2/Comment.qml \
     qml/R2/createnote.js \
     qml/R2/comment.js \
-    qml/R2/Note.qml
+    qml/R2/Note.qml \
+    qml/R2/FeedToolBar.qml \
+    qml/R2/Notice.qml

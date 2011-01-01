@@ -25,19 +25,15 @@ WorkerScript.onMessage = function(message) {
                         WorkerScript.sendMessage({auth:auth,sid:sid});
                 }
             }
+            else{
+                WorkerScript.sendMessage({msg:"auth error"});
+            }
         }
     }
     http.open("POST", "https://www.google.com/accounts/ClientLogin");
     http.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     http.setRequestHeader("Content-Length", auth_params.length);
-
-
-    try {
-      console.log("http auth send")
-      http.send( auth_params );
-    } catch (e) {
-        console.log(e)
-    }
+    http.send( auth_params );
 
 
 }

@@ -10,11 +10,15 @@ FocusScope {
 
     Keys.onPressed:{
         if(event.key==17825793)cancel()
-        else if(event.key==17825792)send(mailto_.text,mailnote_.text)
+        else if(event.key==17825792){
+            if(!mailto_.text)return
+            send(mailto_.text,mailnote_.text)
+        }
     }
     onFocusChanged:{
         if(activeFocus){
             mailto_.forceActiveFocus()
+            mailnote_.text = ""
         }
     }
     KeyNavigation.down:mailto_

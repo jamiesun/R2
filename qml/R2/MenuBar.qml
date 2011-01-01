@@ -1,7 +1,7 @@
 import Qt 4.7
 
 Item{
-    width: 320
+    width: parent.width
     height: 24
 
     property string type: "index"

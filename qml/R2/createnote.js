@@ -11,7 +11,9 @@ WorkerScript.onMessage = function(message) {
     var title = snippet.length>32?snippet.substr(0,32)+"...":snippet
 
 
-    var params = "T="+token+"&linkify=true&share=true&snippet="+snippet+"&title="+title
+    var params = "T="+token+"&linkify=true&share=true"
+                 + "&snippet="+encodeURIComponent(snippet)
+                 + "&title="+encodeURIComponent(title)
 
     for(var ik in tags) params += "&tags=user/-/label/"+tags[ik]
 
@@ -21,13 +23,10 @@ WorkerScript.onMessage = function(message) {
     var http = new XMLHttpRequest();
     http.onreadystatechange = function() {
         if (http.readyState == XMLHttpRequest.DONE) {
-            console.log("new note result: "+ http.status+"  "+http.statusText);
             if(http.status==200){
-               WorkerScript.sendMessage({code:0})
-            }else if(http.status==401){
-                console.log("401 error")
-            } else{
-                console.log("new note error")
+                WorkerScript.sendMessage({code:0,msg:"sucess"})
+            }else{
+                WorkerScript.sendMessage({code:http.status,msg:"error "+http.statusText})
             }
         }
     }

@@ -7,29 +7,18 @@ WorkerScript.onMessage = function(message) {
     var http = new XMLHttpRequest();
     http.onreadystatechange = function() {
         if (http.readyState == XMLHttpRequest.DONE) {
-            console.log("token result: "+ http.status+"  "+http.statusText);
-            //console.log("resp:"+http.getAllResponseHeaders());
             if(http.status==200){
-                 WorkerScript.sendMessage({token:http.responseText});
-            }else if(http.status==401){
-                console.log("401 error")
-            } else{
-                console.log("getToken error")
+                WorkerScript.sendMessage({msg:"sucess",token:http.responseText});
+            }else{
+                WorkerScript.sendMessage({msg:"error "+http.statusText})
             }
         }
     }
-    var url = "https://www.google.com/reader/api/0/token?client=scroll&ck="+Number(new Date());
-    http.open("GET", url);
+
+    http.open("GET", "https://www.google.com/reader/api/0/token?client=scroll&ck="+Number(new Date()))
     http.setRequestHeader("Authorization","GoogleLogin auth="+auth);
     http.setRequestHeader("Cookie","SID="+sid);
-    http.setRequestHeader("accept-encoding", "gzip, deflate")
-    try {
-      console.log(url)
-      http.send();
-    } catch (e) {
-        console.log(e)
-        error(e);
-    }
+    http.send()
 
 
 }

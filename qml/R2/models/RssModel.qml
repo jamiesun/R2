@@ -2,8 +2,8 @@ import Qt 4.7
 import "../cache.js" as Cache
 ListModel{
     id:rssModel
-    property string sid:""
-    property string auth:""
+    property string sid:mainApp.sid
+    property string auth:mainApp.auth
     property string tag:""
     property string source: "https://www.google.com/reader/api/0/subscription/list?output=json"
     property string contentSource: "https://www.google.com/reader/api/0/stream/contents/"
@@ -40,7 +40,7 @@ ListModel{
             var categories = rss.categories
             if(categories&&categories.length>0){
                 for(var k=0;k<categories.length;k++){
-                    if(categories[k].label==tag){
+                    if(categories[k].id==tag){
                         var ct = getCount(rss.id)
                         rssModel.append({feedtitle:rss.title,feedid:contentSource+rss.id,count:ct})
                         counttotle += ct
@@ -53,8 +53,6 @@ ListModel{
     }
 
     function update(){
-
-        //console.log("start update tags \n sid="+sid+"\n auth="+auth)
         if(!sid||!auth){
             error("not login")
             return;
@@ -83,11 +81,7 @@ ListModel{
         http.setRequestHeader("Authorization","GoogleLogin auth="+auth);
         http.setRequestHeader("Cookie","SID="+sid);
         http.setRequestHeader("accept-encoding", "gzip, deflate")
-        //console.log("auth string:"+authStr+"\n\n sid="+sid)
-        try {
-          console.log("http GET "+source)
-          http.send();
-        } catch (e) {
+        try { http.send()} catch (e) {
             console.log(e)
             error(e);
         }

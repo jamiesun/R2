@@ -5,29 +5,26 @@ WorkerScript.onMessage = function(message) {
     var sid = message.sid
     var token = message.token
     var emailTo = message.emailTo
-    var subject = message.title
-    var entry = message.id
+    var subject = message.subject
     var comment = message.comment
     var id = message.id
+
+    if(!emailTo)return
 
     var params = "T="+token
                  +"&i="+id
                  +"&emailTo="+emailTo
-                 +"&subject="+subject
-                 +"&comment="+comment
+                 +"&subject="+encodeURIComponent(subject)
+                 +"&comment="+encodeURIComponent(comment)
 
-    console.log("start sendmail..."+params)
 
     var http = new XMLHttpRequest();
     http.onreadystatechange = function() {
         if (http.readyState == XMLHttpRequest.DONE) {
-            console.log("sendmail result: "+ http.status+"  "+http.statusText);
             if(http.status==200){
-               WorkerScript.sendMessage({code:0})
-            }else if(http.status==401){
-                console.log("401 error")
-            } else{
-                console.log("sendmail error")
+                WorkerScript.sendMessage({code:0,msg:"sucess"})
+            }else{
+                WorkerScript.sendMessage({code:0,msg:"error "+http.statusText})
             }
         }
     }
@@ -37,14 +34,7 @@ WorkerScript.onMessage = function(message) {
     http.setRequestHeader("Cookie","SID="+sid);
     http.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     http.setRequestHeader("Content-Length", params.length);
-    try {
-      console.log(url+"&"+params)
-      http.send(params);
-    } catch (e) {
-        console.log(e)
-        error(e);
-    }
-
+    http.send(params)
 
 }
 

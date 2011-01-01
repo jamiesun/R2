@@ -2,18 +2,14 @@ import Qt 4.7
 import "models"
 Item {
     id:taglist
-    property string auth: ''
-    property string sid: ''
     Behavior on opacity{NumberAnimation{duration: 200}}
     width: 320
     height: 240
-    signal itemClick(string tag,string tid)
+    signal itemClick(string tagname,string tagid)
     signal doSettings()
     signal doNote()
 
-    function updateModel(mauth,msid){
-        auth = mauth
-        sid = msid
+    function updateModel(){
         tagsModel.update()
     }
 
@@ -30,7 +26,7 @@ Item {
     }
 
     TagsModel{
-        id:tagsModel;auth: taglist.auth;sid: taglist.sid
+        id:tagsModel
         onError: console.log(error)
     }
 
@@ -44,7 +40,6 @@ Item {
         anchors.topMargin: 0
         KeyNavigation.up:list_view;KeyNavigation.down:list_view
         onSettings: doSettings()
-        onReload:tagsModel.update()
         onNote:doNote()
     }
 

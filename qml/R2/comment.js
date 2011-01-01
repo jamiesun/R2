@@ -1,48 +1,44 @@
 WorkerScript.onMessage = function(message) {
-    console.log("sendmail action")
-
+    console.log("comment action")
     var auth = message.auth
     var sid = message.sid
     var token = message.token
-    var action = "addcomment"
-    var streamId = message.streamId
-    var comment = message.comment
-    var id = message.id
+    var snippet = message.snippet
+    var annotation = message.comment
+    var srcTitle = message.srcTitle
+    var srcUrl = message.srcUrl
+    var title = message.title
+    var url = message.url
 
-    var params = "T="+token
-                 +"&i="+id
-                 +"&action=addcomment"
-                 +"&s="+streamId
-                 +"&comment="+comment
+    var params = "T="+token+"&linkify=false&share=true"
+                 + "&annotation="+encodeURIComponent(annotation)
+                 + "&snippet="+encodeURIComponent(snippet)
+                 + "&srcTitle="+encodeURIComponent(srcTitle)
+                 + "&srcUrl="+encodeURIComponent(srcUrl)
+                 + "&title="+encodeURIComponent(title)
+                 + "&url="+encodeURIComponent(url)
 
-    console.log("start comment..."+params)
 
     var http = new XMLHttpRequest();
     http.onreadystatechange = function() {
         if (http.readyState == XMLHttpRequest.DONE) {
-            console.log("comment result: "+ http.status+"  "+http.statusText);
+//            console.log("comment result: "+ http.status+"  "+http.statusText);
+//            console.log("resp:"+http.getAllResponseHeaders());
+//            console.log(http.responseText)
             if(http.status==200){
-               WorkerScript.sendMessage({code:0})
-            }else if(http.status==401){
-                console.log("401 error")
+                WorkerScript.sendMessage({code:0,msg:"sucess"})
             } else{
-                console.log("comment error")
+                WorkerScript.sendMessage({code:0,msg:"error "+http.statusText})
             }
         }
     }
-    var url = "https://www.google.com/reader/api/0/comment/edit?client=scroll"
+    var url = "https://www.google.com/reader/api/0/item/edit?ck="+Number(new Date())+"&client=link-bookmarklet-form"
     http.open("POST",url);
     http.setRequestHeader("Authorization","GoogleLogin auth="+auth);
     http.setRequestHeader("Cookie","SID="+sid);
     http.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     http.setRequestHeader("Content-Length", params.length);
-    try {
-      console.log(url+"&"+params)
-      http.send(params);
-    } catch (e) {
-        console.log(e)
-        error(e);
-    }
+    http.send(params);
 
 
 }

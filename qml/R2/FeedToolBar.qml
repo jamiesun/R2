@@ -5,10 +5,11 @@ Item {
     width: parent.width
     height: 40
     property string title: ""
-    signal reload()
+    signal loadUnread()
+    signal loadRead()
     onFocusChanged:{
         if(activeFocus){
-           reload.focus = true
+           newitem.focus = true
         }
     }
 
@@ -44,7 +45,7 @@ Item {
         text: toolbar.title
         anchors.right: parent.right
         anchors.rightMargin: 10
-        anchors.left: reload.right
+        anchors.left: olditem.right
         anchors.leftMargin: 10
         style: "Raised"
         elide:Text.ElideRight
@@ -54,12 +55,26 @@ Item {
     }
 
     Image {
-        id: reload
+        id: newitem
         opacity:activeFocus?1:0.7
         anchors.left: parent.left
         anchors.leftMargin: 10
         anchors.verticalCenter: parent.verticalCenter
-        source: "res/16/playback_reload.png"
-        Keys.onSelectPressed:toolbar.reload()
+        source: "res/16/eye_inv.png"
+        Keys.onSelectPressed:toolbar.loadUnread()
+        KeyNavigation.left:olditem;KeyNavigation.right:olditem
+    }
+
+    Image {
+        id: olditem
+        x: 0
+        y: 0
+        source: "res/16/eye.png"
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.leftMargin: 10
+        opacity: activeFocus?1:0.7
+        anchors.left: newitem.right
+        Keys.onSelectPressed:toolbar.loadRead()
+        KeyNavigation.left:newitem;KeyNavigation.right:newitem
     }
 }

@@ -2,7 +2,7 @@ import Qt 4.7
 import Utils 1.0
 import "json2.js" as Json
 Rectangle {
-    id: main
+    id: mainApp
     width: 320
     height: 240
     focus: true
@@ -13,6 +13,7 @@ Rectangle {
     property string token: ''
     property string feedMax: "30"
     property variant unreads: {}
+    property string teststr: "this is test"
 
     property string stateUrl: "https://www.google.com/reader/api/0/stream/contents/"
 
@@ -25,13 +26,13 @@ Rectangle {
 
     Keys.onPressed:{console.log(event.key)}
 
+
     Utils{id:utils}
 
     WorkerScript {
         id: unreadWork;source: "unread.js"
         onMessage: {
             if(messageObject.unreads){
-                console.log("unread success")
                 var tmp = JSON.parse(messageObject.unreads)['unreadcounts']
                 if(tmp){
                     var urtmp = {}
@@ -39,11 +40,8 @@ Rectangle {
                         var uit = tmp[ikey]
                         urtmp[Qt.md5(uit.id)] = uit.count
                     }
-                    main.unreads = urtmp
+                    mainApp.unreads = urtmp
                 }
-            }
-            else{
-                console.log("unread faild");
             }
         }
     }
@@ -52,11 +50,10 @@ Rectangle {
         id: tokenWork; source: "token.js"
         onMessage: {
             if(messageObject.token){
-                console.log("token success")
-                main.token = messageObject.token
+                mainApp.token = messageObject.token
             }
             else{
-                console.log("token faild");
+                notice.show("token faild");
             }
         }
     }
@@ -68,14 +65,14 @@ Rectangle {
         onMessage: {
             if(messageObject.auth&&messageObject.sid){
                 console.log("login success")
-                main.auth = messageObject.auth;
-                main.sid = messageObject.sid;
-                tokenWork.sendMessage({auth:main.auth,sid:main.sid})
+                mainApp.auth = messageObject.auth;
+                mainApp.sid = messageObject.sid;
+                tokenWork.sendMessage({auth:mainApp.auth,sid:mainApp.sid})
                 unreadTimer.start()
-                taglist.updateModel(main.auth,main.sid)
+                taglist.updateModel()
             }
             else{
-                console.log("login faild");
+                notice.show(messageObject.msg);
             }
             loading.show = false
         }
@@ -84,24 +81,24 @@ Rectangle {
     Timer {
         id:unreadTimer;triggeredOnStart:true
         interval: 1000*60*3; running: false; repeat: true
-        onTriggered: unreadWork.sendMessage({auth:main.auth,sid:main.sid})
+        onTriggered: unreadWork.sendMessage({auth:mainApp.auth,sid:mainApp.sid})
     }
 
     function initConfig(){
         var cfgstr = utils.safeRead(".config")
         if(cfgstr == ""){
-            main.state = "showSettings"
+            mainApp.state = "showSettings"
         }else{
             var cfgs = cfgstr.split(",")
             if(cfgs.length<3){
                 console.log("error config")
-                main.state = "showSettings"
+                mainApp.state = "showSettings"
                 return
             }
-            main.email = cfgs[0]
-            main.passwd = cfgs[1]
-            main.feedMax = cfgs[2]?cfgs[2]:"30"
-            authWork.sendMessage({email:main.email,passwd:main.passwd});
+            mainApp.email = cfgs[0]
+            mainApp.passwd = cfgs[1]
+            mainApp.feedMax = cfgs[2]?cfgs[2]:"30"
+            authWork.sendMessage({email:mainApp.email,passwd:mainApp.passwd});
             loading.show = true
         }
     }
@@ -109,47 +106,44 @@ Rectangle {
     Component.onCompleted:initConfig()
 
     TagList {
-        id: taglist;auth:main.auth;sid:main.sid;
-        anchors.fill: parent;focus: true
+        id: taglist;anchors.fill: parent;focus: true
         onItemClick: {
-            if(tag=="starred"||tag=="broadcast"||tag=="created"){
-                main.state = "showFeedList2"
-                feedlist.update(tag,stateUrl+tid)
+            if(tagname=="starred"||tagname=="broadcast"||tagname=="notes"){
+                mainApp.state = "showFeedList2"
+                feedlist.update(tagname,stateUrl+tagid)
             }else{
-                main.state = "showRsslist"
-                rsslist.filter(tid,main.unreads)
+                mainApp.state = "showRsslist"
+                rsslist.filter(tagname,tagid,mainApp.unreads)
                 rsslist.forceActiveFocus()
             }
         }
-        onDoSettings: main.state = "showSettings"
-        onDoNote:main.state = "showNote"
+        onDoSettings: mainApp.state = "showSettings"
+        onDoNote:mainApp.state = "showNote"
     }
 
     RssList {
-        id: rsslist;auth:main.auth;sid:main.sid;
-        anchors.fill: parent;opacity: 0
-        onBack:main.state = "showMain"
+        id: rsslist;anchors.fill: parent;opacity: 0
+        onBack:mainApp.state = "showMain"
         onItemClick: {
-            main.state = "showFeedList"
+            mainApp.state = "showFeedList"
             feedlist.update(title,url)
         }
-        onHome:main.state = "showMain"
+        onHome:mainApp.state = "showMain"
     }
 
     FeedList{
-        id: feedlist;auth:main.auth;sid:main.sid;token:main.token
-        anchors.fill: parent;opacity: 0
-        onBack:main.state = "showRsslist"
+        id: feedlist;anchors.fill: parent;opacity: 0
+        onBack:mainApp.state = "showRsslist"
         onItemClick: {
-            main.state = "showItem"
+            mainApp.state = "showItem"
             feedDetail.update(feedlist.getCurrentObj())
         }
-        onHome:main.state = "showMain"
+        onHome:mainApp.state = "showMain"
     }
 
     FeedDetail{
         id:feedDetail;opacity: 0;anchors.fill: parent
-        hide:main.state!="showItem"
+        hide:mainApp.state!="showItem"
         onPrevious: {
             feedlist.previous()
             feedDetail.update(feedlist.getCurrentObj())
@@ -165,27 +159,28 @@ Rectangle {
         }
 
         onBack: {
-            if(feedlist.title=="starred"||feedlist.title=="broadcast"||feedlist.title=="created"){
-                main.state = "showFeedList2";
+            if(feedlist.title=="starred"||feedlist.title=="broadcast"||feedlist.title=="notes"){
+                mainApp.state = "showFeedList2";
             }else{
-                main.state = "showFeedList";
+                mainApp.state = "showFeedList";
             }
         }
-        onHome:main.state = "showMain"
-        onSendmail:main.state = "showSendmail"
-        onDoComment:main.state = "showComment"
+        onHome:mainApp.state = "showMain"
+        onSendmail:mainApp.state = "showSendmail"
+        onDoComment:mainApp.state = "showComment"
         onSetMouse:utils.showMouse(isShow)
     }
 
     Settings{
         id:settings
-        email: main.email;passwd: main.passwd;feedMax: main.feedMax
+        email: mainApp.email;passwd: mainApp.passwd;feedMax: mainApp.feedMax
         opacity: 0
         anchors.fill: parent
-        onCancel:main.state = "showMain"
+        onCancel:mainApp.state = "showMain"
         onSave: {
             utils.safeWrite(".config",cfgData)
-            main.state = "showMain"
+            mainApp.state = "showMain"
+            initConfig()
         }
     }
 
@@ -193,11 +188,11 @@ Rectangle {
         id:sendMail;opacity:0;anchors.fill:parent
         WorkerScript {
             id: mailWork;source: "sendmail.js"
-            onMessage: console.log((messageObject.code==0)?"sendMail success":"sendMail faild")
+            onMessage: notice.show(messageObject.msg)
         }
-        onCancel:main.state = "showItem"
+        onCancel:mainApp.state = "showItem"
         onSend:{
-            main.state = "showItem"
+            mainApp.state = "showItem"
             var message = feedlist.getCurrentObj()
             var msg = {}
             msg.emailTo = mailto
@@ -216,13 +211,23 @@ Rectangle {
         id:comment;opacity:0;anchors.fill:parent
         WorkerScript {
             id: commentWork;source: "comment.js"
-            onMessage: console.log((messageObject.code==0)?"comment success":"comment faild")
+            onMessage: notice.show(messageObject.msg)
         }
-        onCancel:main.state = "showItem"
+        onCancel:mainApp.state = "showItem"
         onComment:{
-            main.state = "showItem"
+            mainApp.state = "showItem"
             var message = feedlist.getCurrentObj()
-            var msg = {auth:main.auth,sid:main.sid,token:main.token,comment:content,id:message.id,streamId:message.streamId}
+            var msg = {
+                auth:mainApp.auth,
+                sid:mainApp.sid,
+                token:mainApp.token,
+                comment:content,
+                snippet:message.content,
+                srcTitle:message.srcTitle,
+                srcUrl:message.srcUrl,
+                title:message.title,
+                url:message.url
+            }
             commentWork.sendMessage(msg)
         }
     }
@@ -231,21 +236,20 @@ Rectangle {
         id:note;opacity:0;anchors.fill:parent
         WorkerScript {
             id: noteWork;source: "createnote.js"
-            onMessage: console.log((messageObject.code==0)?"createnote success":"createnote faild")
+            onMessage: notice.show(messageObject.msg)
         }
-        onCancel:main.state = "showMain"
+        onCancel: mainApp.state = "showMain"
         onCreateNote:{
-            main.state = "showMain"
-            var msg = {snippet:content,auth:main.auth,sid:main.sid,token:main.token}
+            mainApp.state = "showMain"
+            var msg = {snippet:content,auth:mainApp.auth,sid:mainApp.sid,token:mainApp.token}
             if(tags) msg.tags = tags
             noteWork.sendMessage(msg)
         }
     }
 
-    Loading{
-        id:loading
-        anchors.fill: parent
-    }
+    Notice{id:notice;opacity:0; x:0;y:mainApp.height-notice.height}
+
+    Loading{id:loading;anchors.fill: parent}
 
     states: [
         State {
@@ -259,7 +263,7 @@ Rectangle {
             PropertyChanges {target: taglist;opacity: 1;focus:true}
             PropertyChanges {target: rsslist;opacity: 0}
             PropertyChanges {target: settings;opacity: 0}
-            PropertyChanges {target: feedlist;opacity: 0;onBack:main.state="showRsslist"}
+            PropertyChanges {target: feedlist;opacity: 0;onBack:mainApp.state="showRsslist"}
         },
         State {
             name: "showFeedList"
@@ -270,7 +274,7 @@ Rectangle {
         },
         State {
             name: "showFeedList2"
-            PropertyChanges {target: feedlist;opacity: 1;focus:true;onBack:main.state="showMain"}
+            PropertyChanges {target: feedlist;opacity: 1;focus:true;onBack:mainApp.state="showMain"}
             PropertyChanges {target: rsslist;opacity: 0}
             PropertyChanges {target: taglist;opacity: 0}
             PropertyChanges {target: settings;opacity: 0}

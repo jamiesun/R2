@@ -10,11 +10,15 @@ FocusScope {
 
     Keys.onPressed:{
         if(event.key==17825793)cancel()
-        else if(event.key==17825792)comment(comment_.text)
+        else if(event.key==17825792){
+            if(!comment_.text)return
+            comment(comment_.text)
+        }
     }
     onFocusChanged:{
         if(activeFocus){
-            tag_.forceActiveFocus()
+            comment_.forceActiveFocus()
+            comment_.text = ""
         }
     }
 
@@ -78,7 +82,7 @@ FocusScope {
         Text {
             id: title_
             color: "#ffffff"
-            text: "Add comment"
+            text: "Share with note"
             font.bold: true
             font.pointSize: 8
             style: "Raised"

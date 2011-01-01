@@ -2,15 +2,13 @@ import Qt 4.7
 import "../json2.js" as Json
 ListModel{
     id:tagsModel
-    property string sid:""
-    property string auth:""
+    property string auth:mainApp.auth
+    property string sid:mainApp.sid
     property string source: "https://www.google.com/reader/api/0/tag/list?output=json"
     property bool busy: false
     signal error(string error)
 
     function update(){
-
-        //console.log("start update tags \n sid="+sid+"\n auth="+auth)
         if(!sid||!auth){
             error("not login")
             return;
@@ -29,7 +27,7 @@ ListModel{
                         var tagname = tagid.substr(tagid.lastIndexOf('/')+1)
                         tagsModel.append({tagname:tagname,tagid:tagid})
                     }
-                    tagsModel.insert(1,{tagname:"Notes",tagid:"user/-/state/com.google/created"})
+                    tagsModel.insert(1,{tagname:"notes",tagid:"user/-/state/com.google/created"})
 
                 }else if(http.status==401){
                     error("401 error")
@@ -47,10 +45,8 @@ ListModel{
         http.setRequestHeader("Cookie","SID="+sid);
         http.setRequestHeader("accept-encoding", "gzip, deflate")
         try {
-          console.log("http GET "+source)
           http.send();
         } catch (e) {
-            console.log(e)
             error(e);
         }
     }
