@@ -63,8 +63,9 @@ Item {
         anchors.top: parent.top
         anchors.topMargin: 0
         KeyNavigation.up:list_view;KeyNavigation.down:list_view
-        onLoadRead: feedModel.reload(true)
-        onLoadUnread: feedModel.reload(false)
+        onLoadCache: feedModel.loadCache()
+        onLoadNew: feedModel.loadNew()
+        onUpdateCache: feedModel.updateCache()
     }
 
     ListView {

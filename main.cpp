@@ -4,7 +4,6 @@
 #include <QWebSettings>
 #include "qmlapplicationviewer.h"
 #include "utils.h"
-
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);

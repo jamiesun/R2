@@ -24,6 +24,9 @@ Flickable {
     signal doComment()
     signal setMouse(bool isShow)
     signal modelChanged(variant obj)
+    signal loadStarted()
+    signal loadFinished()
+
 
     WorkerScript {
         id: actionWork
@@ -127,11 +130,13 @@ Flickable {
         settings.pluginsEnabled:true
         settings.offlineWebApplicationCacheEnabled:true
         Behavior on opacity{NumberAnimation{duration:200}}
-
-
-        onLoadFinished:{
-            evaluateJavaScript("document.body.background='white'';")
+        onLoadStarted: flickable.loadStarted()
+        onLoadFailed: flickable.loadFinished()
+        onLoadFinished: {
+            evaluateJavaScript("document.body.background='white';")
+            flickable.loadFinished()
         }
+
 
         Keys.onUpPressed:{
             if(!flickable.atYBeginning)
@@ -160,14 +165,6 @@ Flickable {
 
     }
 
-
-
-    Loading{
-        id:loading
-        x:(flickable.parent.width - loading.width)/2
-        y:(flickable.parent.height - loading.height)/2
-        show: web_view.progress<1
-    }
 
     FeedMenu{
         id:feedMenu

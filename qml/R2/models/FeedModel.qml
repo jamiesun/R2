@@ -73,39 +73,53 @@ ListModel {
         }
     }
 
-    function reload(isRead){
-        mainApp.setCache(feedModel.feedUrl,"")
-        update(feedModel.feedUrl,isRead)
+
+    function update(feedurl){
+        feedModel.feedUrl = feedurl
+        loadCache()
     }
 
-    function update(feedUrl,isRead){
-        console.log("update feed"+feedUrl)
-        feedModel.feedUrl = feedUrl
+    function updateCache(){
+        sendReq(true)
+    }
+
+    function loadCache(){
+        console.log("load feed cache "+feedUrl)
 
         var cacheData = mainApp.getCache(feedUrl)
-        if(cacheData)
+        if(cacheData){
             var result = JSON.parse(cacheData)
-
-        if(result&&result.length>0){
-            console.log("feed from cache")
-            setData(result)
-            return
+            if(result){
+                setData(result)
+                return
+            }
         }
 
+        sendReq(true)
+    }
+
+    function loadNew(){
+        console.log("load new feed "+feedUrl)
+        sendReq(false)
+    }
+
+    function sendReq(setCache){
         if(!sid||!auth){
             error("not login")
             return;
         }
-
+        console.log("send feed update request")
         var http = new XMLHttpRequest();
         http.onreadystatechange = function() {
             if (http.readyState == XMLHttpRequest.DONE) {
                 if(http.status==200){
                     var result = JSON.parse(http.responseText)
-                    mainApp.setCache(feedUrl,http.responseText)
+                    if(setCache){
+                        console.log("set feed cache "+feedUrl)
+                        mainApp.setCache(feedUrl,http.responseText)
+                    }
+
                     setData(result)
-                }else if(http.status==401){
-                    error("401 error")
                 } else{
                     error("update error")
                 }
@@ -114,9 +128,7 @@ ListModel {
                 feedModel.busy = true
             }
         }
-        var url = isRead?feedUrl+"?n="+feedMax:feedUrl+"?n="+feedMax+"&xt=user/-/state/com.google/read"
-
-        http.open("GET", url);
+        http.open("GET", setCache?feedUrl+"?n="+feedMax:feedUrl+"?n="+feedMax+"&xt=user/-/state/com.google/read");
         http.setRequestHeader("Authorization","GoogleLogin auth="+auth);
         http.setRequestHeader("Cookie","SID="+sid);
         http.setRequestHeader("accept-encoding", "gzip, deflate")

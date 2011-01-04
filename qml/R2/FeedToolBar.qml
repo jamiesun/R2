@@ -5,11 +5,12 @@ Item {
     width: parent.width
     height: 40
     property string title: ""
-    signal loadUnread()
-    signal loadRead()
+    signal loadNew()
+    signal updateCache()
+    signal loadCache()
     onFocusChanged:{
         if(activeFocus){
-           newitem.focus = true
+           olditem.focus = true
         }
     }
 
@@ -45,7 +46,7 @@ Item {
         text: toolbar.title
         anchors.right: parent.right
         anchors.rightMargin: 10
-        anchors.left: olditem.right
+        anchors.left: newitem.right
         anchors.leftMargin: 10
         style: "Raised"
         elide:Text.ElideRight
@@ -54,16 +55,6 @@ Item {
         font.bold: true
     }
 
-    Image {
-        id: newitem
-        opacity:activeFocus?1:0.7
-        anchors.left: parent.left
-        anchors.leftMargin: 10
-        anchors.verticalCenter: parent.verticalCenter
-        source: "res/16/eye_inv.png"
-        Keys.onSelectPressed:toolbar.loadUnread()
-        KeyNavigation.left:olditem;KeyNavigation.right:olditem
-    }
 
     Image {
         id: olditem
@@ -73,8 +64,25 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         anchors.leftMargin: 10
         opacity: activeFocus?1:0.7
-        anchors.left: newitem.right
-        Keys.onSelectPressed:toolbar.loadRead()
+        anchors.left: parent.left
+        Keys.onSelectPressed:toolbar.updateCache()
         KeyNavigation.left:newitem;KeyNavigation.right:newitem
+        onFocusChanged: {
+            if(activeFocus){
+                loadCache()
+            }
+        }
     }
+    Image {
+        id: newitem
+        opacity:activeFocus?1:0.7
+        anchors.left: olditem.right
+        anchors.leftMargin: 10
+        anchors.verticalCenter: parent.verticalCenter
+        source: "res/16/eye_inv.png"
+        Keys.onSelectPressed:toolbar.loadNew()
+        KeyNavigation.left:olditem;KeyNavigation.right:olditem
+    }
+
+
 }

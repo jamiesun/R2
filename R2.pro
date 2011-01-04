@@ -13,9 +13,10 @@ QT +=  webkit network
 DEFINES += NETWORKACCESS
 
 symbian:{
-    TARGET.UID3 = 0xEA2FC102
+    TARGET.UID3 = 0xEA2FC102 #0x200389DF
+    VERSION = "1.1.1"
     TARGET.EPOCHEAPSIZE = 0x200000 0x2000000
-    ICON = MyReader.svg
+    ICON = R2.svg
 }
 
 # Define QMLJSDEBUGGER to allow debugging of QML in debug builds

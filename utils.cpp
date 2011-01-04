@@ -124,4 +124,7 @@ void Utils::run()
     syncCache();
 }
 
-
+Utils::~Utils()
+{
+    syncCache();
+}

@@ -178,37 +178,10 @@ Rectangle {
         onSendmail:mainApp.state = "showSendmail"
         onDoComment:mainApp.state = "showComment"
         onSetMouse:utils.showMouse(isShow)
+        onLoadStarted: loading.show = true
+        onLoadFinished: loading.show = false
     }
 
-    FeedDetailS{
-        id:feedDetailS;opacity: 0;anchors.fill: parent
-        hide:mainApp.state!="showItem"
-        onPrevious: {
-            feedlist.previous()
-            feedDetailS.update(feedlist.getCurrentObj())
-        }
-
-        onNext: {
-            feedlist.next()
-            feedDetailS.update(feedlist.getCurrentObj())
-        }
-
-        onModelChanged: {
-            feedlist.setCurrentObj(obj)
-        }
-
-        onBack: {
-            if(feedlist.title=="starred"||feedlist.title=="broadcast"||feedlist.title=="notes"){
-                mainApp.state = "showFeedList2";
-            }else{
-                mainApp.state = "showFeedList";
-            }
-        }
-        onHome:mainApp.state = "showMain"
-        onSendmail:mainApp.state = "showSendmail"
-        onDoComment:mainApp.state = "showComment"
-        onSetMouse:utils.showMouse(isShow)
-    }
 
     Settings{
         id:settings
@@ -321,14 +294,6 @@ Rectangle {
         State {
             name: "showItem"
             PropertyChanges {target: feedDetail;opacity: 1;focus:true}
-            PropertyChanges {target: feedlist;opacity: 0}
-            PropertyChanges {target: rsslist;opacity: 0}
-            PropertyChanges {target: taglist;opacity: 0}
-            PropertyChanges {target: settings;opacity: 0}
-        },
-        State {
-            name: "showItemS"
-            PropertyChanges {target: feedDetailS;opacity: 1;focus:true}
             PropertyChanges {target: feedlist;opacity: 0}
             PropertyChanges {target: rsslist;opacity: 0}
             PropertyChanges {target: taglist;opacity: 0}
