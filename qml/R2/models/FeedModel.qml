@@ -1,5 +1,5 @@
 import Qt 4.7
-import "../cache.js" as Cache
+import "../json2.js" as Json
 ListModel {
     id:feedModel
     property string sid:mainApp.sid
@@ -74,7 +74,7 @@ ListModel {
     }
 
     function reload(isRead){
-        Cache.set(feedModel.feedUrl,{})
+        mainApp.setCache(feedModel.feedUrl,"")
         update(feedModel.feedUrl,isRead)
     }
 
@@ -82,16 +82,19 @@ ListModel {
         console.log("update feed"+feedUrl)
         feedModel.feedUrl = feedUrl
 
+        var cacheData = mainApp.getCache(feedUrl)
+        if(cacheData)
+            var result = JSON.parse(cacheData)
+
+        if(result&&result.length>0){
+            console.log("feed from cache")
+            setData(result)
+            return
+        }
+
         if(!sid||!auth){
             error("not login")
             return;
-        }
-
-        var result = Cache.get(feedUrl)
-
-        if(result&&result.length>0){
-            setData(result)
-            return
         }
 
         var http = new XMLHttpRequest();
@@ -99,7 +102,7 @@ ListModel {
             if (http.readyState == XMLHttpRequest.DONE) {
                 if(http.status==200){
                     var result = JSON.parse(http.responseText)
-                    Cache.set(feedUrl,result)
+                    mainApp.setCache(feedUrl,http.responseText)
                     setData(result)
                 }else if(http.status==401){
                     error("401 error")

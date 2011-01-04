@@ -1,20 +1,25 @@
 import Qt 4.7
-import QtWebKit 1.0
 Flickable {
     property bool hide: true
     property variant currentObj: {}
     property variant images: []
+    property bool showMouse: false
     id: flickable
     width: parent.width
     contentWidth: Math.max(parent.width,ctx_view.width)
     contentHeight: Math.max(parent.height,ctx_view.height)
 
-    Behavior on contentY{NumberAnimation{duration: 500;easing.type: Easing.InOutQuart}}
+    Behavior on contentX{NumberAnimation{duration: 600;easing.type: Easing.InOutQuart}}
+    Behavior on contentY{NumberAnimation{duration: 600;easing.type: Easing.InOutQuart}}
+
 
     signal next()
     signal previous()
     signal back()
     signal home()
+    signal sendmail()
+    signal doComment()
+    signal setMouse(bool isShow)
     signal modelChanged(variant obj)
 
     WorkerScript {
@@ -175,6 +180,16 @@ Flickable {
             actionWork.sendMessage(msg)
             currentObj.isLike = !currentObj.isLike
             modelChanged(currentObj)
+        }
+
+        onEmail:{
+            feedMenu.hide()
+            sendmail()
+        }
+
+        onComment:{
+            feedMenu.hide()
+            doComment()
         }
 
 

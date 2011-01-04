@@ -12,6 +12,9 @@ Item {
     function updateModel(){
         tagsModel.update()
     }
+    function reloadModel(){
+        tagsModel.reload()
+    }
 
     Keys.onPressed:{
         if(event.key == '17825793'){

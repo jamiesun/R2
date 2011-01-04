@@ -53,10 +53,12 @@ Rectangle {
             y:(parent.height-image1.height)/2
             onStatusChanged: {
                 if(image1.status==Image.Ready){
-                    var w = image1.width
-                    var h = image1.height
+                    var w = image1.sourceSize.width
+                    var h = image1.sourceSize.height
                     var nw = view.width>w?w:view.width
                     var nh = h*(nw/w)
+                    image1.sourceSize.width = nw
+                    image1.sourceSize.height = nh
                     image1.width = nw
                     image1.height = nh
                 }
@@ -75,12 +77,12 @@ Rectangle {
 
     Text {
         text: "Image Unavailable"
-        visible: view.currentItem.imgStatus == Image.Error
+        visible: view.currentItem!=null&&view.currentItem.imgStatus == Image.Error
         anchors.centerIn: parent; color: "white"; font.bold: true
     }
     Loading{
         id:loading
-        show: view.currentItem.imgStatus == Image.Loading
+        show: view.currentItem!=null&&view.currentItem.imgStatus == Image.Loading
         anchors.fill: parent
     }
 

@@ -1,14 +1,26 @@
 #include "utils.h"
 #include <QFile>
 #include <QTextStream>
+#include <QDataStream>
 #include <QDateTime>
 #include <QDebug>
 #include <QtGui/QApplication>
-Utils::Utils(QObject *parent) :
-    QObject(parent)
-{
-}
 
+Utils::Utils(QObject *parent) :
+    QThread(parent),cache(QMap<QString,QString>()),changed(false)
+{
+    if(QFile::exists(getPath()+".cache"))
+    {
+        QFile file(getPath()+".cache");
+        file.open(QIODevice::ReadOnly);
+        QDataStream in(&file);
+        in.setVersion(QDataStream::Qt_4_7);
+        in>>cache;
+        file.close();
+    }
+    this->start();
+
+}
 
 void  Utils::write(const QString &fname, const QString &ctx)
 {
@@ -80,26 +92,36 @@ void Utils::showMouse(bool isShow)
     }
 }
 
-QString Utils::getCache(const QString &fname)
+void Utils::syncCache()
 {
-    QFile file(getPath()+fname);
-    QFileInfo info(file);
-    if(QDateTime::currentDateTime()> info.lastModified().addSecs(10*60))
-    {
-        return "";
-    }
+    if(!changed)
+        return;
+    qDebug()<<"sync cache";
+    QFile file(getPath()+".cache");
+    file.open(QIODevice::WriteOnly);
+    QDataStream out(&file);
+    out.setVersion(QDataStream::Qt_4_7);
+    out<<cache;
+    file.flush();
+    file.close();
+}
 
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-    return QString::fromUtf8(file.readAll());
+QString Utils::getCache(const QString &name)
+{
+    return cache[name];
 }
 
 
 void Utils::setCache(const QString &key,const QString &value)
 {
-    QFile file(getPath()+key);
-    file.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream out(&file);
-    out << value.toUtf8();
-    file.close();
+    cache[key] = value;
+    changed = true;
 }
+
+void Utils::run()
+{
+    sleep(60);
+    syncCache();
+}
+
 

@@ -1,5 +1,4 @@
 import Qt 4.7
-import "../cache.js" as Cache
 ListModel{
     id:rssModel
     property string sid:mainApp.sid
@@ -7,10 +6,11 @@ ListModel{
     property string tag:""
     property string source: "https://www.google.com/reader/api/0/subscription/list?output=json"
     property string contentSource: "https://www.google.com/reader/api/0/stream/contents/"
+    property string cache_key: "rss_model"
+    property variant cacheData: {}
 
     property variant unreads: {}
     property bool busy: false
-    property string cacheKey: "rssCache"
     signal error(string error)
 
     function getCount(id){
@@ -23,8 +23,13 @@ ListModel{
     function filter(tag,unreads){
         rssModel.tag = tag
         rssModel.unreads = unreads
-        var result = Cache.get(cacheKey)
-        if(result){
+
+        if(!cacheData)
+            cacheData = mainApp.getCache(cache_key)
+
+        if(cacheData){
+            console.log("rss from cache")
+            var result = JSON.parse(cacheData)['subscriptions']
             filter2(tag,result)
         }
         else{
@@ -65,7 +70,7 @@ ListModel{
                 //console.log("resp:"+http.getAllResponseHeaders());
                 if(http.status==200){
                     var result = JSON.parse(http.responseText)['subscriptions']
-                    Cache.set(cacheKey,result)
+                    mainApp.setCache(cache_key,http.responseText)
                     filter2(rssModel.tag,result)
                 }else if(http.status==401){
                     error("401 error")
