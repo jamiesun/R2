@@ -27,6 +27,7 @@ Item {
     }
     Text {
         color: "white"
+        font.pointSize:mainApp.fontSize
         anchors.centerIn: buttonImage; font.bold: true
         text: container.text; style: Text.Raised; styleColor: "black"
     }

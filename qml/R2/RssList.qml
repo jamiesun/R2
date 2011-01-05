@@ -4,8 +4,8 @@ Item {
     id:rsslist
     property string tag: ""
     Behavior on opacity{NumberAnimation{duration: 200}}
-    width: 320
-    height: 240
+    width: parent.width
+    height: parent.height
     signal back()
     signal home()
     signal itemClick(string title,string url)

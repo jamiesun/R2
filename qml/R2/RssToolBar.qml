@@ -49,8 +49,7 @@ Item {
         style: "Raised"
         elide:Text.ElideRight
         anchors.verticalCenter: parent.verticalCenter
-        font.pointSize: 8
-        font.bold: true
+        font.pointSize:mainApp.fontSize
     }
 
     Image {

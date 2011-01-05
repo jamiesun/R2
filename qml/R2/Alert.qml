@@ -48,7 +48,7 @@ Item {
             }
         }
         anchors.fill: parent
-        opacity: 0.7
+        opacity: 0.9
         border.width: 3
         border.color: "#ffffff"
 
@@ -87,13 +87,14 @@ Item {
         }
     }
 
-    TextEdit {
+    Text {
         id: content
         color: "#ffffff"
         text:msg
         font.bold: false
+        font.pointSize:mainApp.fontSize
+        font.weight: Font.DemiBold
         wrapMode: TextEdit.WrapAnywhere
-        readOnly: true
         textFormat: TextEdit.RichText
         anchors.fill: parent
         anchors.rightMargin: 20

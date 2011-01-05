@@ -47,7 +47,7 @@ Item {
         anchors.leftMargin: 8
         anchors.verticalCenter: parent.verticalCenter
         clip: false
-        font.pointSize: 8
+        font.pointSize:mainApp.fontSize
         style: Text.Raised
     }
 }

@@ -3,7 +3,7 @@ import Qt 4.7
 FocusScope {
     id: tagItem
     width: parent.width
-    height: activeFocus?40:32
+    height: activeFocus?title.height+16:title.height+10
     Behavior on height{NumberAnimation{duration: 200}}
     property alias title: title.text
     property string tid: tagid
@@ -54,7 +54,7 @@ FocusScope {
         height: 20
         color: "#ffffff"
         text: tagname
-        font.pointSize:8
+        font.pointSize: mainApp.fontSize
         anchors.left: tagimg.right
         anchors.leftMargin: 10
         anchors.verticalCenter: parent.verticalCenter

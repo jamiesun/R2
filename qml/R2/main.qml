@@ -6,6 +6,7 @@ Rectangle {
     width: 320
     height: 240
     focus: true
+    property real fontSize: 7.5
     property string email: ""
     property string passwd: ""
     property string auth: ''
@@ -34,6 +35,16 @@ Rectangle {
 
     Keys.onPressed:{console.log(event.key)}
 
+    Keys.onDigit3Pressed:{
+        if(fontSize<9){
+            fontSize += 0.5
+        }
+    }
+    Keys.onDigit1Pressed:{
+        if(fontSize>7){
+            fontSize -= 0.5
+        }
+    }
 
     Utils{id:utils}
 

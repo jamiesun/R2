@@ -85,8 +85,8 @@ FocusScope {
             id: title_
             color: "#ffffff"
             text: "Add Note"
-            font.bold: true
-            font.pointSize: 8
+            font.weight: Font.DemiBold
+            font.pointSize:mainApp.fontSize
             style: "Raised"
             anchors.centerIn: parent
         }
@@ -124,7 +124,7 @@ FocusScope {
             anchors.left: parent.left
             anchors.leftMargin: 10
             anchors.verticalCenter: parent.verticalCenter
-            font.pointSize: 8
+            font.pointSize:mainApp.fontSize
         }
     }
 
@@ -144,6 +144,7 @@ FocusScope {
         TextEdit {
             id: note_
             text: ""
+            font.pointSize:mainApp.fontSize
             cursorVisible: activeFocus
             anchors.rightMargin: 5
             anchors.leftMargin: 5

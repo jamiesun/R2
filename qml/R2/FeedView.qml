@@ -35,7 +35,7 @@ Rectangle {
         text: ""
         clip: false
         textFormat:Text.RichText
-        font.pointSize: 8
+        font.pointSize:mainApp.fontSize
         wrapMode: TextEdit.WordWrap
     }
 

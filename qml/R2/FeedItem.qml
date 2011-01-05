@@ -9,7 +9,7 @@ Item {
     Rectangle {
         id: bg
         radius: 10
-        opacity: 0.7
+        opacity: 0.8
         gradient: Gradient {
             GradientStop {
                 id: gradientstop1
@@ -33,7 +33,7 @@ Item {
         anchors.fill: parent
     }
 
-    TextEdit {
+    Text {
         id: title_
         clip: false
         color: "#f5ecec"
@@ -44,7 +44,7 @@ Item {
         anchors.leftMargin: 10
         anchors.verticalCenter: parent.verticalCenter
         wrapMode: TextEdit.WrapAnywhere
-        font.pointSize:8
+        font.pointSize:mainApp.fontSize
     }
 
     Image {
@@ -64,7 +64,7 @@ Item {
             PropertyChanges {
                 target: gradientstop1
                 position: 0
-                color: "#424242"
+                color: "#646464"
             }
 
 

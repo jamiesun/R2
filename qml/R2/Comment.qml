@@ -84,7 +84,7 @@ FocusScope {
             color: "#ffffff"
             text: "Share with note"
             font.bold: true
-            font.pointSize: 8
+            font.pointSize:mainApp.fontSize
             style: "Raised"
             anchors.centerIn: parent
         }
@@ -106,6 +106,8 @@ FocusScope {
         TextEdit {
             id: comment_
             text: ""
+            font.pointSize:mainApp.fontSize
+            font.weight: Font.DemiBold
             cursorVisible: activeFocus
             anchors.rightMargin: 5
             anchors.leftMargin: 5

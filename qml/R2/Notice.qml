@@ -23,5 +23,6 @@ Rectangle {
         id: msg_
         text: ""
         anchors.centerIn: parent
+        font.pointSize:mainApp.fontSize
     }
 }

@@ -49,7 +49,7 @@ Item {
             anchors.topMargin: 5
             anchors.left: parent.left
             anchors.leftMargin: 20
-            font.pointSize:8
+            font.pointSize:mainApp.fontSize
         }
 
         Rectangle {
@@ -75,7 +75,7 @@ Item {
                 anchors.bottomMargin: 5
                 anchors.topMargin: 5
                 anchors.fill: parent
-                font.pointSize:7
+                font.pointSize:mainApp.fontSize
                 KeyNavigation.down:passwd_;KeyNavigation.up:fnum
             }
         }
@@ -89,7 +89,7 @@ Item {
             anchors.leftMargin: 20
             anchors.top: ebox.bottom
             anchors.topMargin: 5
-            font.pointSize:8
+            font.pointSize:mainApp.fontSize
         }
 
         Rectangle {
@@ -111,7 +111,7 @@ Item {
                 text: ""
                 echoMode: TextInput.PasswordEchoOnEdit
                 cursorVisible: activeFocus
-                font.pointSize:7
+                font.pointSize:mainApp.fontSize
                 anchors.fill: parent
                 anchors.topMargin: 5
                 anchors.rightMargin: 5
@@ -129,7 +129,7 @@ Item {
             height: 20
             color: "#ffffff"
             text: "Feeds maxnum:"
-            font.pointSize:8
+            font.pointSize:mainApp.fontSize
             anchors.top: pbox.bottom
             anchors.topMargin: 8
             anchors.leftMargin: 20
@@ -152,7 +152,7 @@ Item {
                 text: "30"
                 validator: IntValidator{bottom: 10; top: 1000;}
                 cursorVisible: activeFocus
-                font.pointSize:7
+                font.pointSize:mainApp.fontSize
                 anchors.fill: parent
                 anchors.topMargin:8
                 anchors.rightMargin: 5

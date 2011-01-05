@@ -85,7 +85,7 @@ FocusScope {
             color: "#ffffff"
             text: "Send Mail"
             font.bold: true
-            font.pointSize: 8
+            font.pointSize:12
             style: "Raised"
             anchors.centerIn: parent
         }
@@ -106,6 +106,7 @@ FocusScope {
         TextInput {
             id: mailto_
             text: ""
+            font.pointSize:mainApp.fontSize
             cursorVisible: activeFocus
             anchors.right: parent.right
             anchors.rightMargin: 10
@@ -123,7 +124,7 @@ FocusScope {
             anchors.left: parent.left
             anchors.leftMargin: 10
             anchors.verticalCenter: parent.verticalCenter
-            font.pointSize: 8
+            font.pointSize:mainApp.fontSize
         }
     }
 
@@ -143,6 +144,7 @@ FocusScope {
         TextEdit {
             id: mailnote_
             text: ""
+            font.pointSize:mainApp.fontSize
             cursorVisible: activeFocus
             anchors.rightMargin: 5
             anchors.leftMargin: 5
