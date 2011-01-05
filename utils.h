@@ -13,7 +13,6 @@ class Utils :public QThread
     Q_OBJECT
 public:
     explicit Utils(QObject *parent = 0);
-    virtual ~Utils();
     Q_INVOKABLE QString read(const QString &fname);
     Q_INVOKABLE void write(const QString &fname,const QString &ctx);
     Q_INVOKABLE QString safeRead(const QString &fname);

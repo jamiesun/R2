@@ -173,6 +173,7 @@ Rectangle {
             }else{
                 mainApp.state = "showFeedList";
             }
+            loading.show = false
         }
         onHome:mainApp.state = "showMain"
         onSendmail:mainApp.state = "showSendmail"

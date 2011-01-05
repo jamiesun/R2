@@ -6,8 +6,7 @@
 #include <QDebug>
 #include <QtGui/QApplication>
 
-Utils::Utils(QObject *parent) :
-    QThread(parent),cache(QMap<QString,QString>()),changed(false)
+Utils::Utils(QObject *parent) : QThread(parent),changed(false)
 {
     if(QFile::exists(getPath()+".cache"))
     {
@@ -124,7 +123,4 @@ void Utils::run()
     syncCache();
 }
 
-Utils::~Utils()
-{
-    syncCache();
-}
+
