@@ -3,7 +3,7 @@ import Qt 4.7
 Item {
     id: menu
     width: 160
-    height: 190
+    height: 195
     scale:0.5
     property bool isShare: false
     property bool isStar: false
@@ -17,6 +17,7 @@ Item {
     signal like()
     signal email()
     signal comment()
+//    signal download()
 
     function show(){
         menu.opacity = 1
@@ -155,4 +156,18 @@ Item {
         Keys.onSelectPressed:menu.comment()
         KeyNavigation.down:closed;KeyNavigation.up:email
     }
+//    MenuItem {
+//        id: download
+//        icon: "res/16/download.png"
+//        txt: "Save Image"
+//        opacity: activeFocus?1:0.7
+//        anchors.top: comment.bottom
+//        anchors.left: parent.left
+//        anchors.right: parent.right
+//        anchors.topMargin: 5
+//        anchors.rightMargin: 10
+//        anchors.leftMargin: 10
+//        Keys.onSelectPressed:menu.download()
+//        KeyNavigation.down:closed;KeyNavigation.up:comment
+//    }
 }

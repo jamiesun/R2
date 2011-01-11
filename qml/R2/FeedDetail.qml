@@ -78,14 +78,33 @@ Flickable {
             currentObj.isRead = true
             modelChanged(currentObj)
         }
+
+        var re = /<IMG(.*?)src=\"*(.*?)\"*(\s|>)/gi
+        var ms
+        var ncontent = mobj.content
+        while ((ms = re.exec(mobj.content)))  {
+            var ourl = ms[2]
+            var nurl = mainApp.getImagePath(ourl)
+            ncontent = ncontent.replace(ourl,nurl)
+        }
+
         web_view.html = "<style> body{background:white;font-size：12px;} img{max-width:"
                   + (flickable.parent.width-20)
                   + "px;} </style>"
                   + "<h3>"+currentObj.title+"</h3>"
-                  + currentObj.content
+                  + ncontent
         web_view.forceActiveFocus()
         contentX = 0
         contentY = 0
+    }
+
+    function doDownload(){
+        var re = /<IMG(.*?)src=\"*(.*?)\"*(\s|>)/gi
+        var ms
+        var ncontent = web_view.html
+        while ((ms = re.exec(ncontent)))  {
+            mainApp.addDownloadImg(ms[2])
+        }
     }
 
 
@@ -211,6 +230,12 @@ Flickable {
         onComment:{
             feedMenu.hide()
             doComment()
+        }
+
+        onDownload: {
+            feedMenu.hide()
+            flickable.forceActiveFocus()
+            doDownload()
         }
 
 

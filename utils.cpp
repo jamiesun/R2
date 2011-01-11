@@ -5,9 +5,21 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QtGui/QApplication>
-
+#include <QCryptographicHash>
 Utils::Utils(QObject *parent) : QThread(parent),changed(false)
 {
+#if defined(Q_OS_SYMBIAN)
+    imagePath = getPath()+"images//";
+#else
+    imagePath = getPath()+"images/";
+#endif
+    QDir dir(imagePath);
+    if(!dir.exists(imagePath))
+    {
+        dir.mkdir(imagePath);
+    }
+    downTask.setPath(imagePath);
+
     if(QFile::exists(getPath()+".cache"))
     {
         QFile file(getPath()+".cache");
@@ -20,6 +32,8 @@ Utils::Utils(QObject *parent) : QThread(parent),changed(false)
     this->start();
 
 }
+
+
 
 void  Utils::write(const QString &fname, const QString &ctx)
 {
@@ -95,6 +109,7 @@ void Utils::syncCache()
 {
     if(!changed)
         return;
+    QMutexLocker locker(&lock);
     qDebug()<<"sync cache";
     QFile file(getPath()+".cache");
     file.open(QIODevice::WriteOnly);
@@ -117,10 +132,53 @@ void Utils::setCache(const QString &key,const QString &value)
     changed = true;
 }
 
+QString Utils::getPath()
+{
+    QString path;
+#if defined(Q_OS_SYMBIAN)
+    path = QString("E://.R2//");
+#else
+    path = QFSFileEngine::homePath()+"/.R2/";
+#endif
+    QDir dir(path);
+    if(!dir.exists(path))
+    {
+        dir.mkdir(path);
+    }
+    return path;
+}
+
+void Utils::addUrl(const QString &url)
+{
+    qDebug()<<"add image download task "<<url;
+    downTask.download(QUrl(url));
+}
+
+QString Utils::getImagePath(const QString &url)
+{
+    QByteArray fid  = QCryptographicHash::hash ( url.toAscii(),QCryptographicHash::Md5 );
+    QString ipath;
+    ipath.append(imagePath).append(fid.toHex());
+
+    if(QFile::exists(ipath))
+    {
+        return ipath;
+    }
+    else
+    {
+        addUrl(url);
+        return url;
+    }
+}
+
+
 void Utils::run()
 {
-    sleep(60);
-    syncCache();
+    while(true)
+    {
+        sleep(60);
+        syncCache();
+    }
 }
 
 

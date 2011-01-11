@@ -6,18 +6,35 @@ Rectangle {
     color: "#272727"
     Behavior on opacity{NumberAnimation{duration: 200}}
     signal close()
+    property int cindex: 0
 
     function update(images){
         viewModel.clear()
+        cindex =0
         for(var k in images){
             viewModel.append({imgsrc:images[k]})
         }
+        currImg.source =  mainApp.getImagePath(viewModel.get(cindex).imgsrc)
         console.log("totle photo:"+images.length)
+    }
+
+    function previous(){
+        if(cindex>0){
+            cindex -=1
+            currImg.source =  mainApp.getImagePath(viewModel.get(cindex).imgsrc)
+        }
+    }
+
+    function next(){
+        if(cindex<(viewModel.count-1)){
+             cindex +=1
+        }
+        currImg.source =  mainApp.getImagePath(viewModel.get(cindex).imgsrc)
     }
 
     function show(){
         opacity = 1
-        view.forceActiveFocus()
+        currImg.forceActiveFocus()
     }
 
     function hide(){
@@ -27,62 +44,46 @@ Rectangle {
 
     onFocusChanged: {
         if(activeFocus){
-            view.forceActiveFocus()
+            currImg.forceActiveFocus()
         }
     }
 
+    ListModel {id: viewModel}
 
 
-    ListView {
-        id: view
-        x:0;y:0
-        width: photoview.width;height: photoview.height
-        model:ListModel {id: viewModel}
-        preferredHighlightBegin: 0; preferredHighlightEnd: 0
-        highlightRangeMode: ListView.StrictlyEnforceRange
-        orientation: ListView.Horizontal
-        snapMode: ListView.SnapOneItem; flickDeceleration: 2000
-        delegate: Item {
-            anchors.fill: parent
-            property alias imgStatus: image1.status
-            Image {
-            id: image1
-            asynchronous: true
-            source: imgsrc
-            x:(parent.width-image1.width)/2
-            y:(parent.height-image1.height)/2
-            onStatusChanged: {
-                if(image1.status==Image.Ready){
-                    var w = image1.sourceSize.width
-                    var h = image1.sourceSize.height
-                    var nw = view.width>w?w:view.width
-                    var nh = h*(nw/w)
-                    image1.sourceSize.width = nw
-                    image1.sourceSize.height = nh
-                    image1.width = nw
-                    image1.height = nh
-                }
+    Image {
+        id: currImg
+        asynchronous: true
+        fillMode: Image.PreserveAspectFit
+        onStatusChanged: {
+            if(currImg.status==Image.Ready){
+                width=Math.min(currImg.width,parent.width)
+                height=Math.min(currImg.height,parent.height)
+                x=(parent.width-currImg.width)/2
+                y=(parent.height-currImg.height)/2
             }
-
-          }
-
         }
 
         Keys.onSelectPressed:close()
-        Keys.onLeftPressed:view.decrementCurrentIndex()
-        Keys.onRightPressed:view.incrementCurrentIndex()
-        Keys.onUpPressed:view.decrementCurrentIndex()
-        Keys.onDownPressed:view.incrementCurrentIndex()
+        Keys.onLeftPressed:previous()
+        Keys.onRightPressed:next()
+        Keys.onUpPressed:previous()
+        Keys.onDownPressed:next()
     }
+
+
+
+
+
 
     Text {
         text: "Image Unavailable"
-        visible: view.currentItem!=null&&view.currentItem.imgStatus == Image.Error
+        visible: currImg.status == Image.Error
         anchors.centerIn: parent; color: "white"; font.bold: true
     }
     Loading{
         id:loading
-        show: view.currentItem!=null&&view.currentItem.imgStatus == Image.Loading
+        show: currImg.status == Image.Loading
         anchors.fill: parent
     }
 

@@ -7,7 +7,9 @@
 #include <QMap>
 #include <QVariant>
 #include <QThread>
-
+#include <QMutex>
+#include <QMutexLocker>
+#include <photodownload.h>
 class Utils :public QThread
 {
     Q_OBJECT
@@ -21,6 +23,9 @@ public:
     Q_INVOKABLE void setCache(const QString  &key,const QString &value);
     Q_INVOKABLE void syncCache();
     Q_INVOKABLE void showMouse(bool isShow);
+    Q_INVOKABLE QString getPath();
+    Q_INVOKABLE QString getImagePath(const QString &url);
+    Q_INVOKABLE void addUrl(const QString &url);
 signals:
 
 public slots:
@@ -31,21 +36,9 @@ protected:
 private:
     QMap<QString,QString> cache;
     bool changed;
-    QString getPath()
-    {
-        QString path;
-    #if defined(Q_OS_SYMBIAN)
-        path = QString("E://.R2//");
-    #else
-        path = QFSFileEngine::homePath()+"/.R2/";
-    #endif
-        QDir dir(path);
-        if(!dir.exists(path))
-        {
-            dir.mkdir(path);
-        }
-        return path;
-    }
+    PhotoDownload downTask;
+    QString imagePath;
+    QMutex lock;
 
 };
 
