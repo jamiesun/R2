@@ -144,6 +144,7 @@ FocusScope {
         TextEdit {
             id: note_
             text: ""
+            wrapMode: TextEdit.WrapAnywhere
             font.pointSize:mainApp.fontSize
             cursorVisible: activeFocus
             anchors.rightMargin: 5

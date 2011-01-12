@@ -107,7 +107,7 @@ FocusScope {
             id: comment_
             text: ""
             font.pointSize:mainApp.fontSize
-            font.weight: Font.DemiBold
+            wrapMode: TextEdit.WrapAnywhere
             cursorVisible: activeFocus
             anchors.rightMargin: 5
             anchors.leftMargin: 5

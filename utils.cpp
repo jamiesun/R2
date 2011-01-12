@@ -9,7 +9,7 @@
 #include <QWebSettings>
 Utils::Utils(QObject *parent) : QThread(parent),changed(false)
 {
-    imagePath = getPath()+"images/";
+    imagePath = getPath()+"TEMP/";
     QDir dir(imagePath);
     if(!dir.exists(imagePath))
     {

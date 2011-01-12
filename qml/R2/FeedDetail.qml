@@ -107,11 +107,6 @@ Flickable {
     }
 
 
-    Rectangle{
-        anchors.fill: parent
-        color: "#ffffff"
-        opacity: web_view.opacity
-    }
 
     property int histx : 0
     property int histy : 0
@@ -142,18 +137,10 @@ Flickable {
         clip: true;smooth:true
         preferredWidth: flickable.width
         preferredHeight: flickable.height
-        settings.javascriptEnabled:true
-        settings.linksIncludedInFocusChain:true
-        settings.localContentCanAccessRemoteUrls:true
-        settings.pluginsEnabled:true
-        settings.offlineWebApplicationCacheEnabled:true
         Behavior on opacity{NumberAnimation{duration:200}}
         onLoadStarted: flickable.loadStarted()
         onLoadFailed: flickable.loadFinished()
-        onLoadFinished: {
-            evaluateJavaScript("document.body.background='white';")
-            flickable.loadFinished()
-        }
+        onLoadFinished: flickable.loadFinished()
 
 
         Keys.onUpPressed:{
@@ -167,20 +154,9 @@ Flickable {
 
         Keys.onLeftPressed:{
             flickable.previous()
-//            if(flickable.atXBeginning){
-//                flickable.previous()
-//                if(showMouse)web_view.back.trigger()
-//            }
-//            else
-//                flickable.contentX -= Math.min(flickable.parent.width/2,Math.abs(flickable.contentX));
-
         }
         Keys.onRightPressed:{
             flickable.next()
-//            if(flickable.atXEnd)
-//                flickable.next()
-//            else
-//                flickable.contentX += Math.min(flickable.parent.width/2,Math.abs(flickable.parent.width-(flickable.contentWidth-contentX)));
         }
 
     }
