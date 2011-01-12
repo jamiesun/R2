@@ -48,14 +48,15 @@ Flickable {
     Keys.onPressed:{
         if(event.key == '17825793'){
             feedMenu.hide()
-            showMouse = false
-            setMouse(showMouse)
+//            showMouse = false
+//            setMouse(showMouse)
             back()
         }
         if(event.key == '17825792'){
             feedMenu.hide()
-            showMouse = !showMouse
-            setMouse(showMouse)
+//            showMouse = !showMouse
+//            setMouse(showMouse)
+            home()
         }
     }
 
@@ -88,9 +89,7 @@ Flickable {
             ncontent = ncontent.replace(ourl,nurl)
         }
 
-        web_view.html = "<style> body{background:white;font-size：12px;} img{max-width:"
-                  + (flickable.parent.width-20)
-                  + "px;} </style>"
+        web_view.html = "<style> body{background:white;font-size：12px;} img{max-width:"+(flickable.parent.width-20)+"px;height:auto;} </style>"
                   + "<h3>"+currentObj.title+"</h3>"
                   + ncontent
         web_view.forceActiveFocus()
@@ -167,19 +166,21 @@ Flickable {
         }
 
         Keys.onLeftPressed:{
-            if(flickable.atXBeginning){
-                flickable.previous()
-                if(showMouse)web_view.back.trigger()
-            }
-            else
-                flickable.contentX -= Math.min(flickable.parent.width/2,Math.abs(flickable.contentX));
+            flickable.previous()
+//            if(flickable.atXBeginning){
+//                flickable.previous()
+//                if(showMouse)web_view.back.trigger()
+//            }
+//            else
+//                flickable.contentX -= Math.min(flickable.parent.width/2,Math.abs(flickable.contentX));
 
         }
         Keys.onRightPressed:{
-            if(flickable.atXEnd)
-                flickable.next()
-            else
-                flickable.contentX += Math.min(flickable.parent.width/2,Math.abs(flickable.parent.width-(flickable.contentWidth-contentX)));
+            flickable.next()
+//            if(flickable.atXEnd)
+//                flickable.next()
+//            else
+//                flickable.contentX += Math.min(flickable.parent.width/2,Math.abs(flickable.parent.width-(flickable.contentWidth-contentX)));
         }
 
     }

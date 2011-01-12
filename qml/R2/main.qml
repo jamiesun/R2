@@ -163,73 +163,74 @@ Rectangle {
         id: feedlist;anchors.fill: parent;opacity: 0
         onBack:mainApp.state = "showRsslist"
         onItemClick: {
-            mainApp.state = "showItemS"
-            feedDetailS.update(feedlist.getCurrentObj())
+            mainApp.state = "showItem"
+            feedDetail.update(feedlist.getCurrentObj())
         }
         onHome:mainApp.state = "showMain"
     }
 
-//    FeedDetail{
-//        id:feedDetail;opacity: 0;anchors.fill: parent
-//        hide:mainApp.state!="showItem"
-//        onPrevious: {
-//            feedlist.previous()
-//            feedDetail.update(feedlist.getCurrentObj())
-//        }
-
-//        onNext: {
-//            feedlist.next()
-//            feedDetail.update(feedlist.getCurrentObj())
-//        }
-
-//        onModelChanged: {
-//            feedlist.setCurrentObj(obj)
-//        }
-
-//        onBack: {
-//            if(feedlist.title=="starred"||feedlist.title=="broadcast"||feedlist.title=="notes"){
-//                mainApp.state = "showFeedList2";
-//            }else{
-//                mainApp.state = "showFeedList";
-//            }
-//            loading.show = false
-//        }
-//        onHome:mainApp.state = "showMain"
-//        onSendmail:mainApp.state = "showSendmail"
-//        onDoComment:mainApp.state = "showComment"
-//        onSetMouse:utils.showMouse(isShow)
-//        onLoadStarted: loading.show = true
-//        onLoadFinished: loading.show = false
-//    }
-
-    FeedDetailS{
-            id:feedDetailS;opacity: 0;anchors.fill: parent
-            hide:mainApp.state!="showItemS"
-            onPrevious: {
-                feedlist.previous()
-                feedDetailS.update(feedlist.getCurrentObj())
-            }
-
-            onNext: {
-                feedlist.next()
-                feedDetailS.update(feedlist.getCurrentObj())
-            }
-
-            onModelChanged: {
-                feedlist.setCurrentObj(obj)
-            }
-
-            onBack: {
-                if(feedlist.title=="starred"||feedlist.title=="broadcast"||feedlist.title=="notes"){
-                    mainApp.state = "showFeedList2";
-                }else{
-                    mainApp.state = "showFeedList";
-                }
-            }
-            onHome:mainApp.state = "showMain"
-            onSendmail:mainApp.state = "showSendmail"
-            onDoComment:mainApp.state = "showComment"
+    FeedDetail{
+        id:feedDetail;opacity: 0;anchors.fill: parent
+        hide:mainApp.state!="showItem"
+        onPrevious: {
+            feedlist.previous()
+            feedDetail.update(feedlist.getCurrentObj())
         }
+
+        onNext: {
+            feedlist.next()
+            feedDetail.update(feedlist.getCurrentObj())
+        }
+
+        onModelChanged: {
+            feedlist.setCurrentObj(obj)
+        }
+
+        onBack: {
+            if(feedlist.title=="starred"||feedlist.title=="broadcast"||feedlist.title=="notes"){
+                mainApp.state = "showFeedList2";
+            }else{
+                mainApp.state = "showFeedList";
+            }
+            utils.clearWebCache()
+            loading.show = false
+        }
+        onHome:mainApp.state = "showMain"
+        onSendmail:mainApp.state = "showSendmail"
+        onDoComment:mainApp.state = "showComment"
+        onSetMouse:utils.showMouse(isShow)
+        onLoadStarted: loading.show = true
+        onLoadFinished: loading.show = false
+    }
+
+//    FeedDetailS{
+//            id:feedDetailS;opacity: 0;anchors.fill: parent
+//            hide:mainApp.state!="showItemS"
+//            onPrevious: {
+//                feedlist.previous()
+//                feedDetailS.update(feedlist.getCurrentObj())
+//            }
+
+//            onNext: {
+//                feedlist.next()
+//                feedDetailS.update(feedlist.getCurrentObj())
+//            }
+
+//            onModelChanged: {
+//                feedlist.setCurrentObj(obj)
+//            }
+
+//            onBack: {
+//                if(feedlist.title=="starred"||feedlist.title=="broadcast"||feedlist.title=="notes"){
+//                    mainApp.state = "showFeedList2";
+//                }else{
+//                    mainApp.state = "showFeedList";
+//                }
+//            }
+//            onHome:mainApp.state = "showMain"
+//            onSendmail:mainApp.state = "showSendmail"
+//            onDoComment:mainApp.state = "showComment"
+//        }
 
 
     Settings{
@@ -340,22 +341,22 @@ Rectangle {
             PropertyChanges {target: taglist;opacity: 0}
             PropertyChanges {target: settings;opacity: 0}
         },
-//        State {
-//            name: "showItem"
-//            PropertyChanges {target: feedDetail;opacity: 1;focus:true}
-//            PropertyChanges {target: feedlist;opacity: 0}
-//            PropertyChanges {target: rsslist;opacity: 0}
-//            PropertyChanges {target: taglist;opacity: 0}
-//            PropertyChanges {target: settings;opacity: 0}
-//        },
         State {
-            name: "showItemS"
-            PropertyChanges {target: feedDetailS;opacity: 1;focus:true}
+            name: "showItem"
+            PropertyChanges {target: feedDetail;opacity: 1;focus:true}
             PropertyChanges {target: feedlist;opacity: 0}
             PropertyChanges {target: rsslist;opacity: 0}
             PropertyChanges {target: taglist;opacity: 0}
             PropertyChanges {target: settings;opacity: 0}
         },
+//        State {
+//            name: "showItemS"
+//            PropertyChanges {target: feedDetailS;opacity: 1;focus:true}
+//            PropertyChanges {target: feedlist;opacity: 0}
+//            PropertyChanges {target: rsslist;opacity: 0}
+//            PropertyChanges {target: taglist;opacity: 0}
+//            PropertyChanges {target: settings;opacity: 0}
+//        },
         State {
             name: "showSettings"
             PropertyChanges {target: settings;opacity: 1;focus:true}

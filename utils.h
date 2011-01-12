@@ -9,6 +9,7 @@
 #include <QThread>
 #include <QMutex>
 #include <QMutexLocker>
+#include <QWebSettings>
 #include <photodownload.h>
 class Utils :public QThread
 {
@@ -26,6 +27,7 @@ public:
     Q_INVOKABLE QString getPath();
     Q_INVOKABLE QString getImagePath(const QString &url);
     Q_INVOKABLE void addUrl(const QString &url);
+    Q_INVOKABLE void clearWebCache();
 signals:
 
 public slots:
@@ -39,6 +41,7 @@ private:
     PhotoDownload downTask;
     QString imagePath;
     QMutex lock;
+
 
 };
 

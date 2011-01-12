@@ -33,6 +33,7 @@ Rectangle {
         Text {
             id: text1
             text: "text"
+            font.family: "微软雅黑"
             anchors.centerIn: parent
         }
     }

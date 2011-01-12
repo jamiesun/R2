@@ -14,12 +14,9 @@ DEFINES += NETWORKACCESS
 
 symbian:{
     TARGET.UID3 = 0xEA2FC102 #0x200389DF
-    VERSION = "1.1.2"
+    VERSION = "1.2.1"
     TARGET.EPOCHEAPSIZE = 0x200000 0x2000000
     ICON = R2.svg
-    TARGET.CAPABILITY = NetworkServices \
-        ReadUserData \
-        WriteUserData \
 }
 
 # Define QMLJSDEBUGGER to allow debugging of QML in debug builds
@@ -35,7 +32,8 @@ symbian:{
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
     utils.cpp \
-    photodownload.cpp
+    photodownload.cpp \
+    savetask.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -45,7 +43,8 @@ RESOURCES +=
 
 HEADERS += \
     utils.h \
-    photodownload.h
+    photodownload.h \
+    savetask.h
 
 OTHER_FILES += \
     qml/R2/models/TagsModel.qml \

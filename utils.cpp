@@ -6,13 +6,10 @@
 #include <QDebug>
 #include <QtGui/QApplication>
 #include <QCryptographicHash>
+#include <QWebSettings>
 Utils::Utils(QObject *parent) : QThread(parent),changed(false)
 {
-#if defined(Q_OS_SYMBIAN)
-    imagePath = getPath()+"images//";
-#else
     imagePath = getPath()+"images/";
-#endif
     QDir dir(imagePath);
     if(!dir.exists(imagePath))
     {
@@ -132,11 +129,16 @@ void Utils::setCache(const QString &key,const QString &value)
     changed = true;
 }
 
+void Utils::clearWebCache()
+{
+    QWebSettings::globalSettings()->clearMemoryCaches();
+}
+
 QString Utils::getPath()
 {
     QString path;
 #if defined(Q_OS_SYMBIAN)
-    path = QString("E://.R2//");
+    path = QString("E:/.R2/");
 #else
     path = QFSFileEngine::homePath()+"/.R2/";
 #endif
@@ -150,7 +152,6 @@ QString Utils::getPath()
 
 void Utils::addUrl(const QString &url)
 {
-    qDebug()<<"add image download task "<<url;
     downTask.download(QUrl(url));
 }
 
@@ -162,7 +163,7 @@ QString Utils::getImagePath(const QString &url)
 
     if(QFile::exists(ipath))
     {
-        return ipath;
+        return "file:///"+ipath;
     }
     else
     {

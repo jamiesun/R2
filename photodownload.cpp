@@ -1,55 +1,50 @@
-#include <QtGui>
 #include "photodownload.h"
-#include <QDebug>
-#include <QImageReader>
-#include <QImage>
-#include <QCryptographicHash>
+
 PhotoDownload::PhotoDownload(QObject *parent) :
     QObject(parent)
 {
     http = new QNetworkAccessManager(parent);
     connect(http,SIGNAL(finished(QNetworkReply*)),this,SLOT(finished(QNetworkReply*)));
+    connect(&saveTask,SIGNAL(saveDone(QString)),this,SLOT(rmvHistory(QString)));
 }
 
 
 void PhotoDownload::setPath(QString dir)
 {
-    this->dir = dir;
+    saveTask.setPath(dir);
 }
 
 void PhotoDownload::download(QUrl url)
 {
-    http->get(QNetworkRequest(url));
+    if(!history.contains(url.toString()))
+    {
+        qDebug()<<"start download image"<<url;
+        history.append(url.toString());
+        QNetworkRequest request(url);
+        request.setRawHeader("User-Agent","Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/534.10 (KHTML, like Gecko) Chrome/8.0.552.215 Safari/534.10");
+        request.setRawHeader("Keep-Alive","115");
+        request.setRawHeader("Referer","http://www.google.com");
+        http->get(request);
+    }
+
 
 }
 
-QString PhotoDownload::getPath()
+void PhotoDownload::rmvHistory(const QString &url)
 {
-    return this->dir;
+    history.removeOne(url);
 }
 
 void PhotoDownload::finished(QNetworkReply *reply)
 {
-    QVariant statusCodeV =
-       reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-       if (statusCodeV.toInt()==200)
-       {
-           QString fname;
-           QImageReader imageReader(reply);
-           QImage pic = imageReader.read();
-           QByteArray fid  = QCryptographicHash::hash ( reply->url().toString().toAscii(),
-                                               QCryptographicHash::Md5 );
-           fname =  QString(dir+"%1").arg(QString(fid.toHex()));
-           pic.save(fname,"PNG");
-           qDebug()<<fname<<" download ok";
-       }
-       else
-       {
-           qDebug()<<" download error:"<<reply->errorString();
-       }
+    saveTask.append(reply);
+
 }
 
 PhotoDownload::~PhotoDownload()
 {
     delete http;
 }
+
+
+

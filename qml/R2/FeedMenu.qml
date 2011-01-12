@@ -17,7 +17,7 @@ Item {
     signal like()
     signal email()
     signal comment()
-//    signal download()
+    signal download()
 
     function show(){
         menu.opacity = 1
