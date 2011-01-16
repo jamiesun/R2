@@ -21,6 +21,7 @@ ListModel{
 
 
     function filter(tag,unreads){
+        rssModel.clear()
         rssModel.tag = tag
         rssModel.unreads = unreads
 

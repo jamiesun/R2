@@ -14,6 +14,7 @@ public:
 
 signals:
     void saveDone(const QString &url);
+    void saveFail(const QString &url);
 
 public slots:
 

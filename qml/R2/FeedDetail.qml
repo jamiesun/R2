@@ -3,13 +3,11 @@ import QtWebKit 1.0
 Flickable {
     property bool hide: true
     property variant currentObj: {}
-    property bool showMouse: false
-
-
     id: flickable
     width: parent.width
     contentWidth: Math.max(parent.width,web_view.width)
     contentHeight: Math.max(parent.height,web_view.height)
+    boundsBehavior: "StopAtBounds"
     pressDelay: 200
     smooth: true
 
@@ -22,21 +20,24 @@ Flickable {
     signal home()
     signal sendmail()
     signal doComment()
-    signal setMouse(bool isShow)
     signal modelChanged(variant obj)
-    signal loadStarted()
-    signal loadFinished()
+    signal notice(string msg)
+    signal needLogin()
 
+    function chkLogin(){
+        if(!mainApp.auth||!mainApp.sid||!mainApp.token){
+            needLogin()
+            return false
+        }
+        return true
+    }
 
     WorkerScript {
         id: actionWork
         source: "edittag.js"
         onMessage: {
-            if(messageObject.code==0){
-                console.log("action success")
-            }
-            else{
-                console.log("action faild");
+            if(messageObject.code==401){
+                needLogin()
             }
         }
     }
@@ -48,19 +49,13 @@ Flickable {
     Keys.onPressed:{
         if(event.key == '17825793'){
             feedMenu.hide()
-//            showMouse = false
-//            setMouse(showMouse)
             back()
         }
         if(event.key == '17825792'){
             feedMenu.hide()
-//            showMouse = !showMouse
-//            setMouse(showMouse)
             home()
         }
     }
-
-
 
     function copyObj(obj,dest){
         for(var k in obj){
@@ -72,7 +67,7 @@ Flickable {
     function update(mobj){
         if(!mobj)return
         currentObj = mobj
-        if(!currentObj.isRead){
+        if(!currentObj.isRead&&mainApp.isLogin()){
             var msg = {action:true,option:"read"}
             copyObj(currentObj,msg)
             actionWork.sendMessage(msg)
@@ -95,15 +90,6 @@ Flickable {
         web_view.forceActiveFocus()
         contentX = 0
         contentY = 0
-    }
-
-    function doDownload(){
-        var re = /<IMG(.*?)src=\"*(.*?)\"*(\s|>)/gi
-        var ms
-        var ncontent = web_view.html
-        while ((ms = re.exec(ncontent)))  {
-            mainApp.addDownloadImg(ms[2])
-        }
     }
 
 
@@ -138,10 +124,6 @@ Flickable {
         preferredWidth: flickable.width
         preferredHeight: flickable.height
         Behavior on opacity{NumberAnimation{duration:200}}
-        onLoadStarted: flickable.loadStarted()
-        onLoadFailed: flickable.loadFinished()
-        onLoadFinished: flickable.loadFinished()
-
 
         Keys.onUpPressed:{
             if(!flickable.atYBeginning)
@@ -177,6 +159,7 @@ Flickable {
         }
 
         onShare:{
+            if(!chkLogin)return
             var msg = {action:!currentObj.isShare,option:"broadcast"}
             copyObj(currentObj,msg)
             actionWork.sendMessage(msg)
@@ -184,6 +167,7 @@ Flickable {
             modelChanged(currentObj)
         }
         onStar:{
+            if(!chkLogin)return
             var msg = {action:!currentObj.isStar,option:"starred"}
             copyObj(currentObj,msg)
             actionWork.sendMessage(msg)
@@ -192,6 +176,7 @@ Flickable {
         }
 
         onLike:{
+            if(!chkLogin)return
             var msg = {action:!currentObj.isLike,option:"like"}
             copyObj(currentObj,msg)
             actionWork.sendMessage(msg)
@@ -201,19 +186,16 @@ Flickable {
 
         onEmail:{
             feedMenu.hide()
+            if(!chkLogin)return
             sendmail()
         }
 
         onComment:{
             feedMenu.hide()
+            if(!chkLogin)return
             doComment()
         }
 
-        onDownload: {
-            feedMenu.hide()
-            flickable.forceActiveFocus()
-            doDownload()
-        }
 
 
     }

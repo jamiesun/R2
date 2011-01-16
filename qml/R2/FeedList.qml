@@ -10,6 +10,7 @@ Item {
     signal back()
     signal home()
     signal itemClick()
+    signal notice(string msg)
 
     function getCurrentObj(){
         return feedModel.get(list_view.currentIndex)
@@ -50,7 +51,7 @@ Item {
 
     FeedModel{
         id:feedModel
-        onError: console.log(error)
+        onError: notice(error)
     }
 
     FeedToolBar {

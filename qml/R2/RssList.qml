@@ -2,13 +2,15 @@ import Qt 4.7
 import "models"
 Item {
     id:rsslist
-    property string tag: ""
+    property string tag:""
     Behavior on opacity{NumberAnimation{duration: 200}}
     width: parent.width
     height: parent.height
+
     signal back()
     signal home()
     signal itemClick(string title,string url)
+    signal notice(string msg)
 
     function filter(tagname,tagid,unreads){
         rsslist.tag = tagname
@@ -26,11 +28,11 @@ Item {
             back()
         }
         if(event.key == '17825792'){
-            home()
+            rssModel.update()
         }
     }
 
-    RssModel{id:rssModel;onError: console.log(error)}
+    RssModel{id:rssModel;onError:notice(error)}
 
     RssToolBar {
         id: rsstoolbar
@@ -42,7 +44,6 @@ Item {
         anchors.top: parent.top
         anchors.topMargin: 0
         KeyNavigation.up:list_view;KeyNavigation.down:list_view
-        onReload:rssModel.update()
     }
 
     ListView {

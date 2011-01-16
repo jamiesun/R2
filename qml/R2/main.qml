@@ -27,11 +27,15 @@ Rectangle {
     }
 
     function getImagePath(path){
-        return utils.getImagePath(path)
+        return utils.getImagePath(path,isLogin())
     }
 
     function addDownloadImg(url){
         return utils.addUrl(url)
+    }
+
+    function isLogin(){
+        return auth&&sid
     }
 
     Image {id: name;anchors.fill:parent;source: "res/bg.jpg"}
@@ -107,14 +111,14 @@ Rectangle {
 
     Timer {
         id:unreadTimer;triggeredOnStart:true
-        interval: 1000*60*3; running: false; repeat: true
+        interval: 1000*60*5; running: false; repeat: true
         onTriggered: unreadWork.sendMessage({auth:mainApp.auth,sid:mainApp.sid})
     }
 
 
     function initConfig(){
         var cfgstr = utils.safeRead(".config")
-        if(cfgstr == ""){
+        if(!cfgstr){
             mainApp.state = "showSettings"
         }else{
             var cfgs = cfgstr.split(",")
@@ -126,9 +130,14 @@ Rectangle {
             mainApp.email = cfgs[0]
             mainApp.passwd = cfgs[1]
             mainApp.feedMax = cfgs[2]?cfgs[2]:"30"
+            taglist.updateModel()
             authWork.sendMessage({email:mainApp.email,passwd:mainApp.passwd});
-            loading.show = true
         }
+    }
+
+    function doAuth(){
+        loading.show = true
+        authWork.sendMessage({email:mainApp.email,passwd:mainApp.passwd});
     }
 
     Component.onCompleted:initConfig()
@@ -147,6 +156,7 @@ Rectangle {
         }
         onDoSettings: mainApp.state = "showSettings"
         onDoNote:mainApp.state = "showNote"
+        onDoLogin:doAuth()
     }
 
     RssList {
@@ -157,6 +167,7 @@ Rectangle {
             feedlist.update(title,url)
         }
         onHome:mainApp.state = "showMain"
+        onNotice: notice.show(msg)
     }
 
     FeedList{
@@ -167,6 +178,7 @@ Rectangle {
             feedDetail.update(feedlist.getCurrentObj())
         }
         onHome:mainApp.state = "showMain"
+        onNotice: notice.show(msg)
     }
 
     FeedDetail{
@@ -198,39 +210,10 @@ Rectangle {
         onHome:mainApp.state = "showMain"
         onSendmail:mainApp.state = "showSendmail"
         onDoComment:mainApp.state = "showComment"
-        onSetMouse:utils.showMouse(isShow)
-        onLoadStarted: loading.show = true
-        onLoadFinished: loading.show = false
+        onNotice: notice.show(msg)
+        onNeedLogin: authWork.sendMessage({email:mainApp.email,passwd:mainApp.passwd});
     }
 
-//    FeedDetailS{
-//            id:feedDetailS;opacity: 0;anchors.fill: parent
-//            hide:mainApp.state!="showItemS"
-//            onPrevious: {
-//                feedlist.previous()
-//                feedDetailS.update(feedlist.getCurrentObj())
-//            }
-
-//            onNext: {
-//                feedlist.next()
-//                feedDetailS.update(feedlist.getCurrentObj())
-//            }
-
-//            onModelChanged: {
-//                feedlist.setCurrentObj(obj)
-//            }
-
-//            onBack: {
-//                if(feedlist.title=="starred"||feedlist.title=="broadcast"||feedlist.title=="notes"){
-//                    mainApp.state = "showFeedList2";
-//                }else{
-//                    mainApp.state = "showFeedList";
-//                }
-//            }
-//            onHome:mainApp.state = "showMain"
-//            onSendmail:mainApp.state = "showSendmail"
-//            onDoComment:mainApp.state = "showComment"
-//        }
 
 
     Settings{
@@ -259,9 +242,9 @@ Rectangle {
             var msg = {}
             msg.emailTo = mailto
             msg.comment = content
-            msg.auth = message.auth
-            msg.sid = message.sid
-            msg.token = message.token
+            msg.auth = mainApp.auth
+            msg.sid = mainApp.sid
+            msg.token = mainApp.token
             msg.subject = message.title
             msg.entry = message.id
             msg.id = message.id
@@ -349,14 +332,6 @@ Rectangle {
             PropertyChanges {target: taglist;opacity: 0}
             PropertyChanges {target: settings;opacity: 0}
         },
-//        State {
-//            name: "showItemS"
-//            PropertyChanges {target: feedDetailS;opacity: 1;focus:true}
-//            PropertyChanges {target: feedlist;opacity: 0}
-//            PropertyChanges {target: rsslist;opacity: 0}
-//            PropertyChanges {target: taglist;opacity: 0}
-//            PropertyChanges {target: settings;opacity: 0}
-//        },
         State {
             name: "showSettings"
             PropertyChanges {target: settings;opacity: 1;focus:true}

@@ -17,13 +17,11 @@ WorkerScript.onMessage = function(message) {
     var http = new XMLHttpRequest();
     http.onreadystatechange = function() {
         if (http.readyState == XMLHttpRequest.DONE) {
-            console.log("token result: "+ http.status+"  "+http.statusText);
+            console.log("edittag result: "+ http.status+"  "+http.statusText);
             if(http.status==200){
                WorkerScript.sendMessage({code:0})
             }else if(http.status==401){
-                console.log("401 error")
-            } else{
-                console.log("edit tag error")
+                WorkerScript.sendMessage({code:401})
             }
         }
     }

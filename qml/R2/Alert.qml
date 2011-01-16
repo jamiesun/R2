@@ -93,7 +93,6 @@ Item {
         text:msg
         font.bold: false
         font.pointSize:mainApp.fontSize
-        font.weight: Font.DemiBold
         wrapMode: TextEdit.WrapAnywhere
         textFormat: TextEdit.RichText
         anchors.fill: parent

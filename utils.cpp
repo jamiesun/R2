@@ -7,27 +7,15 @@
 #include <QtGui/QApplication>
 #include <QCryptographicHash>
 #include <QWebSettings>
-Utils::Utils(QObject *parent) : QThread(parent),changed(false)
+Utils::Utils(QObject *parent) : QObject(parent)
 {
-    imagePath = getPath()+"TEMP/";
+    imagePath = getPath()+"images/";
     QDir dir(imagePath);
     if(!dir.exists(imagePath))
     {
         dir.mkdir(imagePath);
     }
     downTask.setPath(imagePath);
-
-    if(QFile::exists(getPath()+".cache"))
-    {
-        QFile file(getPath()+".cache");
-        file.open(QIODevice::ReadOnly);
-        QDataStream in(&file);
-        in.setVersion(QDataStream::Qt_4_7);
-        in>>cache;
-        file.close();
-    }
-    this->start();
-
 }
 
 
@@ -90,49 +78,37 @@ void Utils::safeWrite(const QString &fname, const QString &ctx)
     file.close();
 }
 
-void Utils::showMouse(bool isShow)
+
+
+QString Utils::getCache(const QString &name)
 {
-    if(isShow)
-    {
-        QApplication::setNavigationMode(Qt::NavigationModeCursorForceVisible);
-    }
-    else
-    {
-        QApplication::setNavigationMode(Qt::NavigationModeKeypadDirectional);
-    }
+    QString path = getPath()+name;
+    if(!QFile::exists(path))
+        return "";
+
+    QString cache;
+    QFile file(path);
+    file.open(QIODevice::ReadOnly);
+    QDataStream in(&file);
+    in.setVersion(QDataStream::Qt_4_7);
+    in>>cache;
+    file.close();
+    return cache;
 }
 
-void Utils::syncCache()
+
+void Utils::setCache(const QString &name,const QString &value)
 {
-    if(!changed)
-        return;
-    QMutexLocker locker(&lock);
-    qDebug()<<"sync cache";
-    QFile file(getPath()+".cache");
+    QString path = getPath()+name;
+    QFile file(path);
     file.open(QIODevice::WriteOnly);
     QDataStream out(&file);
     out.setVersion(QDataStream::Qt_4_7);
-    out<<cache;
+    out<<value;
     file.flush();
     file.close();
 }
 
-QString Utils::getCache(const QString &name)
-{
-    return cache[name];
-}
-
-
-void Utils::setCache(const QString &key,const QString &value)
-{
-    cache[key] = value;
-    changed = true;
-}
-
-void Utils::clearWebCache()
-{
-    QWebSettings::globalSettings()->clearMemoryCaches();
-}
 
 QString Utils::getPath()
 {
@@ -155,7 +131,7 @@ void Utils::addUrl(const QString &url)
     downTask.download(QUrl(url));
 }
 
-QString Utils::getImagePath(const QString &url)
+QString Utils::getImagePath(const QString &url,bool isLogin)
 {
     QByteArray fid  = QCryptographicHash::hash ( url.toAscii(),QCryptographicHash::Md5 );
     QString ipath;
@@ -167,19 +143,17 @@ QString Utils::getImagePath(const QString &url)
     }
     else
     {
-        addUrl(url);
-        return url;
+        if(isLogin)
+        {
+            addUrl(url);
+            return url;
+        }
+        else
+        {
+            return "";
+        }
     }
 }
 
-
-void Utils::run()
-{
-    while(true)
-    {
-        sleep(60);
-        syncCache();
-    }
-}
 
 

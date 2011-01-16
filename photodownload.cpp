@@ -6,6 +6,7 @@ PhotoDownload::PhotoDownload(QObject *parent) :
     http = new QNetworkAccessManager(parent);
     connect(http,SIGNAL(finished(QNetworkReply*)),this,SLOT(finished(QNetworkReply*)));
     connect(&saveTask,SIGNAL(saveDone(QString)),this,SLOT(rmvHistory(QString)));
+    connect(&saveTask,SIGNAL(saveFail(QString)),this,SLOT(addInvalid(QString)));
 }
 
 
@@ -16,6 +17,12 @@ void PhotoDownload::setPath(QString dir)
 
 void PhotoDownload::download(QUrl url)
 {
+    if(invalidUrls.contains(url.toString()))
+        return;
+
+    if(history.count()>=10)
+        return;
+
     if(!history.contains(url.toString()))
     {
         qDebug()<<"start download image"<<url;
@@ -27,6 +34,13 @@ void PhotoDownload::download(QUrl url)
         http->get(request);
     }
 
+
+}
+
+void PhotoDownload::addInvalid(const QString &url)
+{
+    if(!invalidUrls.contains(url))
+        invalidUrls.append(url);
 
 }
 

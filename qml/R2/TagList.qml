@@ -8,6 +8,7 @@ Item {
     signal itemClick(string tagname,string tagid)
     signal doSettings()
     signal doNote()
+    signal doLogin()
 
     function updateModel(){
         tagsModel.update()
@@ -19,6 +20,9 @@ Item {
     Keys.onPressed:{
         if(event.key == '17825793'){
             taglist.state = "showQuitAlert"
+        }
+        else if(event.key == '17825792'){
+            doLogin()
         }
     }
 

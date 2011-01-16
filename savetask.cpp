@@ -48,13 +48,13 @@ void SaveTask::run()
                pic.save(fname,"JPG");
            }
            qDebug()<<fname<<" download ok";
-           emit saveDone(reply->url().toString());
+
         }
         else
         {
-           qDebug()<<" download error:"<<reply->errorString();
+           emit saveFail(reply->url().toString());
         }
-
+        emit saveDone(reply->url().toString());
         reply->deleteLater();
     }
 }

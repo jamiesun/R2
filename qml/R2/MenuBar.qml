@@ -9,9 +9,12 @@ Item{
     Component.onCompleted:{
 
         if(type=="index"){
-            lkey.source = ""
+            lkey.source = "res/16/round_and_up.png"
             rkey.source = "res/16/round_delete.png"
-        }else if(type=="rss"||type=="feed"){
+        }else if(type=="rss"){
+            lkey.source = "res/16/playback_reload.png"
+            rkey.source = "res/16/undo.png"
+        }else if(type=="feed"){
             lkey.source = "res/16/home.png"
             rkey.source = "res/16/undo.png"
         }else  if(type=="settings"||type=="sendmail"||type=="comment"){

@@ -21,11 +21,13 @@ signals:
 public slots:
     void finished(QNetworkReply* reply);
     void rmvHistory(const QString &url);
+    void addInvalid(const QString &url);
 
 private:
     QNetworkAccessManager *http;
     SaveTask saveTask;
     QStringList history;
+    QStringList invalidUrls;
 };
 
 

@@ -5,12 +5,6 @@ Item {
     width: parent.width
     height: 40
     property string title: ""
-    signal reload()
-    onFocusChanged:{
-        if(activeFocus){
-           reload.focus = true
-        }
-    }
 
     Rectangle {
         id: rectangle1
@@ -44,7 +38,7 @@ Item {
         text: toolbar.title
         anchors.right: parent.right
         anchors.rightMargin: 10
-        anchors.left: reload.right
+        anchors.left: parent.left
         anchors.leftMargin: 10
         style: "Raised"
         elide:Text.ElideRight
@@ -52,13 +46,4 @@ Item {
         font.pointSize:mainApp.fontSize
     }
 
-    Image {
-        id: reload
-        opacity:activeFocus?1:0.7
-        anchors.left: parent.left
-        anchors.leftMargin: 10
-        anchors.verticalCenter: parent.verticalCenter
-        source: "res/16/playback_reload.png"
-        Keys.onSelectPressed:toolbar.reload()
-    }
 }

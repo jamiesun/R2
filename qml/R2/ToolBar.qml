@@ -55,7 +55,7 @@ Item {
         anchors.left: parent.left
         anchors.leftMargin: 10
         anchors.verticalCenter: parent.verticalCenter
-        source: activeFocus?"res/16/notepad.png":"res/16/notepad_2.png"
+        source: "res/16/notepad_2.png"
         KeyNavigation.right:setting;KeyNavigation.left:setting
         Keys.onSelectPressed:toolbar.note()
     }
