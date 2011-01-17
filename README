@@ -28,7 +28,7 @@ R2是一个Qt Quick开发的s60平台Google Reader客户端.当前版本支持s6
 
     下载安装 Qt Runtime ftp://ftp.qt.nokia.com/qt/symbian/4.7.1/qt_installer.sis
 
-    下载安装 [R2]_v1.0.sis安装文件 http://r2-release.googlecode.com/files/R2_v1.0.sis
+    下载安装 [R2].sis安装文件 http://r2-release.googlecode.com/
 
     qt程序目前在扩展卡启动有点问题，最好安装到内存卡上。
 
