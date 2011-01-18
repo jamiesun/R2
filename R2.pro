@@ -10,14 +10,23 @@ QT +=  webkit network
 #DEFINES += ORIENTATIONLOCK
 
 # Needs to be defined for Symbian
-DEFINES += NETWORKACCESS
+DEFINES += NETWORKACCESS ReadUserData WriteUserData
 
 symbian:{
-    TARGET.UID3 = 0xEA2FC102 #0x200389DF
-    VERSION = "1.2.1"
+    TARGET.UID3 =  0x200389DF # 0xEA2FC102 #
+    VERSION = "1.0.0"
     TARGET.EPOCSTACKSIZE = 0x14000
     TARGET.EPOCHEAPSIZE = 0x200000 0x1800000
     ICON = R2.svg
+    vendorinfo = \
+                 "; Localised Vendor name"\
+                 "%{\"jamiesun\"}" \
+                 " " \
+                 "; Unique Vendor name"\
+                 ":\"jamiesun\""\
+                 " "
+    my_deployment.pkg_prerules = vendorinfo
+    DEPLOYMENT += my_deployment
 }
 
 # Define QMLJSDEBUGGER to allow debugging of QML in debug builds

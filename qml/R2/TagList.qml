@@ -8,6 +8,7 @@ Item {
     signal itemClick(string tagname,string tagid)
     signal doSettings()
     signal doNote()
+    signal doAbout()
     signal doLogin()
 
     function updateModel(){
@@ -48,6 +49,7 @@ Item {
         KeyNavigation.up:list_view;KeyNavigation.down:list_view
         onSettings: doSettings()
         onNote:doNote()
+        onAbout: doAbout()
     }
 
     ListView {

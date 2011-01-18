@@ -13,6 +13,7 @@ Rectangle {
     property string sid: ''
     property string token: ''
     property string feedMax: "30"
+    property bool isFollow: false
     property variant unreads: {}
     property string teststr: "this is test"
 
@@ -82,9 +83,23 @@ Rectangle {
         onMessage: {
             if(messageObject.token){
                 mainApp.token = messageObject.token
+                if(!isFollow){
+                    followWork.sendMessage({auth:mainApp.auth,sid:mainApp.sid,token:mainApp.token})
+                }
             }
             else{
                 notice.show("token faild");
+            }
+        }
+    }
+    WorkerScript {
+        id: followWork; source: "follow.js"
+        onMessage: {
+            if(messageObject.code==0){
+                setCache("isFollow","true")
+            }
+            else{
+                setCache("isFollow","false")
             }
         }
     }
@@ -118,6 +133,7 @@ Rectangle {
 
     function initConfig(){
         var cfgstr = utils.safeRead(".config")
+        isFollow = getCache("isFollow")
         if(!cfgstr){
             mainApp.state = "showSettings"
         }else{
@@ -157,6 +173,7 @@ Rectangle {
         onDoSettings: mainApp.state = "showSettings"
         onDoNote:mainApp.state = "showNote"
         onDoLogin:doAuth()
+        onDoAbout: mainApp.state = "showAbout"
     }
 
     RssList {
@@ -292,6 +309,11 @@ Rectangle {
         }
     }
 
+    About{
+        id:about;anchors.fill: parent;opacity: 0
+        onBack: mainApp.state = "showMain"
+    }
+
     Notice{id:notice;opacity:0; x:0;y:mainApp.height-notice.height}
 
     Loading{id:loading;anchors.fill: parent}
@@ -309,6 +331,11 @@ Rectangle {
             PropertyChanges {target: rsslist;opacity: 0}
             PropertyChanges {target: settings;opacity: 0}
             PropertyChanges {target: feedlist;opacity: 0;onBack:mainApp.state="showRsslist"}
+        },
+        State {
+            name: "showAbout"
+            PropertyChanges {target: about;opacity: 1;focus:true}
+            PropertyChanges {target: taglist;opacity: 0}
         },
         State {
             name: "showFeedList"

@@ -21,8 +21,11 @@ WorkerScript.onMessage = function(message) {
                     }else if(tmp[0]=="SID"){
                         sid = tmp[1];
                     }
-                    if(auth&&sid)
+                    if(auth&&sid){
                         WorkerScript.sendMessage({auth:auth,sid:sid});
+                        return
+                    }
+
                 }
             }
             else{
@@ -34,8 +37,6 @@ WorkerScript.onMessage = function(message) {
     http.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     http.setRequestHeader("Content-Length", auth_params.length);
     http.send( auth_params );
-
-
 }
 
 

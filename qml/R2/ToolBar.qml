@@ -2,11 +2,12 @@ import Qt 4.7
 
 Item {
     id:toolbar
-    width:parent.width
+    width:320
     height: 30
 
     signal settings()
     signal note()
+    signal about()
 
     onFocusChanged: {
         if(activeFocus){
@@ -56,7 +57,7 @@ Item {
         anchors.leftMargin: 10
         anchors.verticalCenter: parent.verticalCenter
         source: "res/16/notepad_2.png"
-        KeyNavigation.right:setting;KeyNavigation.left:setting
+        KeyNavigation.right:setting;KeyNavigation.left:about
         Keys.onSelectPressed:toolbar.note()
     }
 
@@ -68,8 +69,20 @@ Item {
         anchors.leftMargin: 10
         anchors.verticalCenter: parent.verticalCenter
         source: "res/16/wrench_plus_2.png"
-        KeyNavigation.left:notes;KeyNavigation.right:notes
+        KeyNavigation.left:notes;KeyNavigation.right:about
         Keys.onSelectPressed:toolbar.settings()
+    }
+
+    Image {
+        id: about
+        y: 7
+        opacity: activeFocus?1:0.7
+        anchors.left: setting.right
+        anchors.leftMargin: 10
+        anchors.verticalCenter: parent.verticalCenter
+        source: "res/16/emotion_sad.png"
+        KeyNavigation.left:setting;KeyNavigation.right:notes
+        Keys.onSelectPressed:toolbar.about()
     }
 
 

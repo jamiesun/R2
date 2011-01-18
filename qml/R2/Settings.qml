@@ -44,7 +44,7 @@ Item {
             width: 80
             height: 20
             color: "#ffffff"
-            text: "Your Email:"
+            text: "Your Gmail:"
             anchors.top: parent.top
             anchors.topMargin: 5
             anchors.left: parent.left
